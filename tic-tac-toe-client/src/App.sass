@@ -1,0 +1,176 @@
+@import "style/helpers/all"
+@import url('https://fonts.googleapis.com/css?family=Lato')
+
+body
+  font-size: 14px
+  font-family: 'Lato', sans-serif
+  color: white
+
+.App
+  text-align: center
+  max-height: 100vh
+  height: 100vh
+  overflow: hidden
+
+
+.Screen
+  //padding: 10px
+  height: 100%
+
+
+.left-section
+  z-index: 10
+  position: absolute
+  left: 0
+  top: 0
+  bottom: 0
+  +sm
+    width: 100%
+  +sl
+    width: 90%
+  +sd
+    width: 100%
+  background-color: red
+
+  font-size: 14px
+
+
+.right-section
+  background-color: blue
+  position: absolute
+  width: 30%
+  right: 0
+  top: 0
+  bottom: 0
+
+$nav-height: 30px
+
+.chk
+  position: absolute
+  z-index: 1000
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  opacity: 0.6
+
+.b-top-nav
+  position: absolute
+  left: 0
+  right: 0
+  border-radius: 10px 10px 0 0
+  z-index: 20
+  height: 45px
+  background-color: #383155
+  padding: 5px 20px
+  &__button
+    margin-top: 5px
+
+.b-content
+  z-index: 10
+  position: relative
+  padding: 30px 0px 30px
+  height: 100%
+  background-color: #5e476d
+  background-image: url("https://i.pinimg.com/736x/03/0e/3f/030e3f42a21755fea30fc3f4ded04375--mobile-wallpaper-ios--wallpaper.jpg")
+  background-position: center center
+  background-size: 100%
+  background-repeat: no-repeat
+
+.b-footer
+  position: absolute
+  z-index: 20
+  bottom: 0
+  left: 0
+  right: 0
+  height: 45px
+  background-color: #d6827e
+
+
+.left
+  float: left
+
+.right
+  float: right
+
+.white
+  color: white
+
+.c-level
+  padding: 0 10px
+  position: absolute
+  left: 50%
+  transform: translate(-50%, 0)
+  width: 120px
+  height: 35px
+  background-color: #70698f
+  border-radius: 30px
+  line-height: 30px
+  font-size: 18px
+  font-weight: 600
+  color: white
+  &__title
+    vertical-align: middle
+
+.b-game-interface
+  position: relative
+  &__info
+    position: relative
+    height: 50%
+    top: 0
+    left: 0
+    right: 0
+    background-color: red
+    opacity: 0.5
+  &__field
+    position: relative
+    height: 50%
+    bottom: 0
+    left: 0
+    right: 0
+    background-color: blue
+    perspective: 600px
+    opacity: 0.5
+
+
+.b-game-field
+  position: absolute
+  left: 50%
+  width: 100%
+  height: 100%
+  &__inside
+    width: 70%
+    height: 70%
+    background-color: white
+    transform: perspective(880px) rotateX(30deg) translateX(-50%)
+    transform-origin: 0 0
+  &__table
+    border-radius: 10px
+    overflow: hidden
+    font-size: 20px
+    box-shadow: 0px 3px 0px 0px #64659e
+    $_color-field-b: #cfcde5
+    $_color-field-w: #fefefe
+    $_color-field-hover: #8680cc
+    .tr
+      .td
+        vertical-align: middle
+        &:hover
+          background-color: $_color-field-hover !important
+          cursor: pointer
+      .td
+        background-color: $_color-field-b
+        &:nth-child(2n)
+          background-color: $_color-field-w
+      &:nth-child(2n)
+        .td
+          background-color: $_color-field-w
+          &:nth-child(2n)
+            background-color: $_color-field-b
+
+.table
+  display: table
+  .tr
+    display: table-row
+    .td
+      display: table-cell

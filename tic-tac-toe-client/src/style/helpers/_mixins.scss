@@ -1,0 +1,30 @@
+@import '../vars';
+
+@mixin breakpoint($point) {
+  @if $point == desktop {
+    @media (min-width: $desktop) { @content ; }
+  }
+  @else if $point == laptop {
+    @media (min-width: $laptop) { @content ; }
+  }
+  @else if $point == mobile {
+    @media (max-width: $laptop)  { @content ; }
+  }
+}
+
+/* alias for breakpoint */
+@mixin sd(){
+  @include breakpoint(desktop){
+    @content;
+  }
+}
+@mixin sl(){
+  @include breakpoint(laptop){
+    @content;
+  }
+}
+@mixin sm(){
+  @include breakpoint(mobile){
+    @content;
+  }
+}
