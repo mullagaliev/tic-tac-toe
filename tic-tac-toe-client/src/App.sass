@@ -1,6 +1,18 @@
 @import "style/helpers/all"
 @import url('https://fonts.googleapis.com/css?family=Lato')
 
+/* Reset */
+button
+  background: none
+  border: 0
+  color: inherit
+  cursor: pointer
+  /* cursor: default; */
+  font: inherit
+  line-height: normal
+  overflow: visible
+  padding: 0
+
 body
   font-size: 14px
   font-family: 'Lato', sans-serif
@@ -47,7 +59,7 @@ $nav-height: 30px
 
 .chk
   position: absolute
-  z-index: 1000
+  z-index: -1000
   top: 0
   left: 0
   right: 0
@@ -62,14 +74,14 @@ $nav-height: 30px
   z-index: 20
   height: 45px
   background-color: #383155
-  padding: 5px 20px
+  padding: 5px 10px
   &__button
     margin-top: 5px
 
 .b-content
   z-index: 10
   position: relative
-  padding: 30px 0px 30px
+  //padding: 30px 0px 30px
   height: 100%
   background-color: #5e476d
   background-image: url("https://i.pinimg.com/736x/03/0e/3f/030e3f42a21755fea30fc3f4ded04375--mobile-wallpaper-ios--wallpaper.jpg")
@@ -85,6 +97,7 @@ $nav-height: 30px
   right: 0
   height: 45px
   background-color: #d6827e
+  padding: 4px 10px 0
 
 
 .left
@@ -114,63 +127,28 @@ $nav-height: 30px
 
 .b-game-interface
   position: relative
+  &__settings
+    position: absolute
+    top: 50px
+    width: 100%
+    z-index: 20
+    padding: 0 10px
   &__info
     position: relative
     height: 50%
     top: 0
     left: 0
     right: 0
-    background-color: red
-    opacity: 0.5
+    //background-color: red
+    //opacity: 0.5
   &__field
     position: relative
     height: 50%
     bottom: 0
     left: 0
     right: 0
-    background-color: blue
+    //background-color: blue
     perspective: 600px
-    opacity: 0.5
+    //opacity: 0.5
 
 
-.b-game-field
-  position: absolute
-  left: 50%
-  width: 100%
-  height: 100%
-  &__inside
-    width: 70%
-    height: 70%
-    background-color: white
-    transform: perspective(880px) rotateX(30deg) translateX(-50%)
-    transform-origin: 0 0
-  &__table
-    border-radius: 10px
-    overflow: hidden
-    font-size: 20px
-    box-shadow: 0px 3px 0px 0px #64659e
-    $_color-field-b: #cfcde5
-    $_color-field-w: #fefefe
-    $_color-field-hover: #8680cc
-    .tr
-      .td
-        vertical-align: middle
-        &:hover
-          background-color: $_color-field-hover !important
-          cursor: pointer
-      .td
-        background-color: $_color-field-b
-        &:nth-child(2n)
-          background-color: $_color-field-w
-      &:nth-child(2n)
-        .td
-          background-color: $_color-field-w
-          &:nth-child(2n)
-            background-color: $_color-field-b
-
-.table
-  display: table
-  .tr
-    display: table-row
-    .td
-      display: table-cell
