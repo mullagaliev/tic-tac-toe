@@ -10,6 +10,7 @@ export default class Game extends React.Component {
   }
   render() {
     return <Screen
+      active={ this.props.active }
       nav={<div>
         <button className="b-top-nav__button left">
           <Icon name='arrow left' size="large" color="white"/>

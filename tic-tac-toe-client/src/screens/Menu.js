@@ -6,10 +6,12 @@ export default class Menu extends React.Component {
     super();
   }
   render() {
-    return <Screen content={
-      <p>
-        Hello world!
-      </p>}
+    return <Screen
+      active={ this.props.active }
+      content={
+        <p>
+          Hello world!
+        </p>}
     />;
   }
 }

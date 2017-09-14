@@ -11,7 +11,7 @@ export default class Screen extends React.Component {
     super();
   }
   render() {
-    return <div className="Screen">
+    return <div className={'Screen' + (this.props.active ? ' Screen--active' : '') }>
       {this.props.nav ? (<div className="b-top-nav" >
         { this.props.nav }
       </div>) : null }

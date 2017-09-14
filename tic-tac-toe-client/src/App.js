@@ -6,12 +6,12 @@ import 'semantic-ui-css/semantic.min.css';
 import { Menu } from './screens/Menu';
 import { Game } from './screens/Game';
 
-
 let SCREENS = {
-  MENU: {},
-  SETTINGS: {},
-  GAME: {}
+  MENU: { screen: 1 },
+  SETTINGS: { screen: 2 },
+  GAME: { screen: 3 }
 };
+
 class App extends Component {
   constructor() {
     super();
@@ -20,8 +20,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Game/>
-        <Menu className="active"/>
+        <Menu active={true}/>
+        <Game />
       </div>
     );
   }
