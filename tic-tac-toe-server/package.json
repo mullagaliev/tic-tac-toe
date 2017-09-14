@@ -11,5 +11,8 @@
   "dependencies": {
     "express": "^4.15.4",
     "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "express-livereload": "0.0.24"
   }
 }
