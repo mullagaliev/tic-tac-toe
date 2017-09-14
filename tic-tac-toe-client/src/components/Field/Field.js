@@ -1,6 +1,9 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
+import _ from 'lodash';
 import './Field.sass';
+import { subscribeToUpdate, doStep } from '../../api';
+
 
 class Cell extends React.Component {
   static defaultProps = {
@@ -10,7 +13,11 @@ class Cell extends React.Component {
     super();
   }
   onClick() {
-    this.props.onChange(this);
+    // this.props.onChange(this);
+    let row = this.props.row;
+    let cell = this.props.cell;
+    // let value = this.props.value;
+    doStep(row, cell, ()=>{ console.log(1); });
   }
   render() {
     return (<div className="td c-mark" value={this.props.value} onClick={this.onClick.bind(this)}>
@@ -41,13 +48,14 @@ export default class Field extends React.Component {
   }
   constructor() {
     super();
-    let field = [
-      ['x', 'o', 'x', 'x'],
-      ['x', '-', '-', 'o'],
-      ['x', 'o', 'x', 'x'],
-      ['x', '-', 'o', 'o']
-    ];
-    this.state = { currentPlayer: -1, field: field };
+    let length = 4;
+    let defaultField = _.times(length, ()=>{
+      return _.times(length, ' ');
+    });
+    this.state = { currentPlayer: -1, field: defaultField };
+    subscribeToUpdate((err, field) => {
+      this.setState({ field: field });
+    });
   }
   render() {
     // let fieldLength = this.props.length;
@@ -57,7 +65,8 @@ export default class Field extends React.Component {
         { row.map((cell, keyJ) =>{
           return (<Cell
             key={keyJ}
-            position={[keyI, keyJ]}
+            row={keyI}
+            cell={keyJ}
             value={cell}
             onChange={this.onMarkSelect.bind(this)}/>);
         })}

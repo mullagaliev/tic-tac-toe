@@ -84,13 +84,16 @@
     height: 30px
     background-color: white
     border-radius: 100%
-  @at-root &--left
+    .icon
+      margin-top: 1px
+      margin-left: -1px
+  @at-root &--host
     #{$parent}__avatar
       background-color: $color-player1
     #{$parent}__marker
       left: 0
       right: initial
-  @at-root &--right
+  @at-root &--client
     #{$parent}__avatar
       background-color: $color-player2
     #{$parent}__marker
