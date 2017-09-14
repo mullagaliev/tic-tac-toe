@@ -5,13 +5,16 @@ export default class Screen extends React.Component {
   static defaultProps = {
     nav: null,
     content: null,
-    footer: null
+    footer: null,
+    blurBg: false
   };
   constructor() {
     super();
   }
   render() {
     return <div className={'Screen' + (this.props.active ? ' Screen--active' : '') }>
+      <div className={ 'bg-image ' + (this.props.blurBg ? 'bg-image--blur' : '') }>
+      </div>
       {this.props.nav ? (<div className="b-top-nav" >
         { this.props.nav }
       </div>) : null }

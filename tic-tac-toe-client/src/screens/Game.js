@@ -16,7 +16,7 @@ export default class Game extends React.Component {
           <Icon name='arrow left' size="large" color="white"/>
         </button>
         <span className="c-level">
-          <Icon name='star' size="large" color="white"/>
+          <Icon name='trophy' size="large" color="white"/>
           <span className="c-level__title">Level 4</span>
         </span>
         <button className="b-top-nav__button right">
