@@ -7,6 +7,9 @@ export default class Screen extends React.Component {
     content: null,
     footer: null
   };
+  constructor() {
+    super();
+  }
   render() {
     return <div className="Screen">
       {this.props.nav ? (<div className="b-top-nav" >
