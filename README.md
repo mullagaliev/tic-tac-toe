@@ -9,8 +9,6 @@
 2. Запустить React приложение
     > npm start 
 
-
-
 ## Backend
 ### Dependencies
 
@@ -18,4 +16,4 @@
 1. Перейти в папку с сервером 
     > cd tic-tac-toe-server
 2. Запустить React приложение
-    > node index.js 
+    > node node server.js
