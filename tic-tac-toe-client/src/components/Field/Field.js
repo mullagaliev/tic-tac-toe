@@ -39,8 +39,9 @@ export default class Field extends React.Component {
   }
   onMove(row, cell) {
     console.log(row, cell);
-    Move(this.props.roomId, row, cell, ()=>{ console.log(1); });
-    this.UpdateCell(row, cell);
+    Move(this.props.roomId, row, cell, ()=>{
+      this.UpdateCell(row, cell);
+    });
   }
   constructor() {
     super();

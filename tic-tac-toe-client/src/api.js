@@ -43,8 +43,9 @@ function subscribeToUpdatePlayer(cb) {
 
 function Move(roomId, row, cell, cb) {
   console.log('do step');
-  socket.emit('doStep', roomId, row, cell, cb);
-  cb();
+  socket.emit('doStep', roomId, row, cell, () =>{
+    cb();
+  });
 }
 
 function connect(link, cb) {

@@ -18,7 +18,110 @@ class Game{
     this.updateCurrentMovePlayer(player1);
     Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
   }
+  getWinner(){
+    if(!this.field) {
+      return -1;
+    }
+    function getHorizontalWinnerMarker(field) {
+      let rows = field.filter((row)=>{
+        return row[0] === row[1]
+          && row[1] === row[2]
+          && row[2] === row[3];
+      });
+      return rows[0] ? rows[0][0] : MARKERS._;
+    }
+    function getVerticalWinnerMarker(field) {
+      // shit
+      for(let keyCol = 0; keyCol <  field.length; keyCol++) {
+        if( field[0][keyCol] === field[1][keyCol]
+          && field[1][keyCol] === field[2][keyCol]
+          && field[2][keyCol] === field[3][keyCol] ){
+          return field[0][keyCol];
+        }
+      }
+      return MARKERS._;
+    }
+    function getDiagonalWinnerMarker(field) {
+      if( field[0][0] === field[1][1]
+        && field[1][1] === field[2][2]
+        && field[2][2] === field[3][3] ){
+        return field[0][0];
+      }
+      if( field[0][3] === field[1][2]
+        && field[1][2] === field[2][1]
+        && field[2][1] === field[3][0] ){
+        return field[0][3];
+      }
+      return MARKERS._;
+    }
+    let horizontalWinnerMarker  = getHorizontalWinnerMarker(this.field);
+    let verticalWinnerMarker = getVerticalWinnerMarker(this.field);
+    let diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
+
+    let winnerMarker = MARKERS._;
+    if(horizontalWinnerMarker !== MARKERS._){
+      winnerMarker = horizontalWinnerMarker;
+    }
+    else if(verticalWinnerMarker !== MARKERS._){
+      winnerMarker = verticalWinnerMarker;
+    }
+    else if(diagonalWinnerMarker !== MARKERS._){
+      winnerMarker = diagonalWinnerMarker;
+    }
+    else{
+      winnerMarker = MARKERS._;
+    }
+    let playerIdX = this.player1.marker === MARKERS.X ? this.player1.id : this.player2.id;
+    let playerIdO = this.player1.marker === MARKERS.O ? this.player1.id : this.player2.id;
+
+    Logger.log(`Current game field status h - ${horizontalWinnerMarker} v - ${verticalWinnerMarker} d - ${diagonalWinnerMarker}`);
+
+    if( winnerMarker !== MARKERS._){
+      Logger.log(`winner marker - ${winnerMarker}`);
+      if(winnerMarker === MARKERS.X){
+        Logger.log(`winner PlayerID - ${playerIdX}`);
+        return playerIdX;
+      }
+      else if(winnerMarker === MARKERS.O){
+        return playerIdO;
+        Logger.log(`winner PlayerID - ${playerIdO}`);
+      }
+      else{
+        throw new FatalGameException(`Undefined marker`);
+      }
+    }
+    return -1;
+  }
+  /**
+   * bool
+   */
+  moves(){
+    return this.field.reduce((prev, row)=>{
+      return prev || row.reduce((prevCell, cell)=>{
+        return prevCell || (cell === MARKERS._);
+      }, false);
+    }, false);
+  }
+  /**
+   * bool
+   */
+  isEnd(){
+    if( !this.moves() ) {
+      Logger.log(`All busy`);
+      return true;
+    }
+    try{
+      return this.getWinner() !== -1;
+    }
+    catch(e){
+      Logger.log(e.message);
+      return true;
+    }
+  }
   move(row, cell, client){
+    if (this.isEnd()) {
+      throw new GameException(`Game ended`);
+    }
     if(this.currentMovePlayer.id !== client.id){
       throw new GameException(`Not your turn`);
     }
@@ -28,13 +131,25 @@ class Game{
     if( this.field[row][cell] !== MARKERS._ ){
       throw new GameException(`Cell is busy`);
     }
-
+    if(!this.moves()){
+      throw new GameException(`don't exist any empty cell`);
+    }
     this.field[row][cell] = this.currentMovePlayer.marker;
     this.player1.socket.emit('updateField', this.field);
     this.player2.socket.emit('updateField', this.field);
     Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
 
-    this.updateCurrentMovePlayer();
+    if (this.isEnd()) {
+      let winnerId = this.getWinner();
+      this.player1.socket.emit('gameEnd', winnerId);
+      this.player2.socket.emit('gameEnd', winnerId);
+      // TODO Tmp
+      this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
+      this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
+    }
+    else{
+      this.updateCurrentMovePlayer();
+    }
   }
   updateCurrentMovePlayer(player = null){
     if(player){
