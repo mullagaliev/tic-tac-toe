@@ -11,7 +11,6 @@ class Player{
     this.room = 1;
     this.isHost = isHost;
     this.socket = client;
-
     Logger.log(` Player ${this} created...`);
   }
   swapMarkers(otherPlayer){

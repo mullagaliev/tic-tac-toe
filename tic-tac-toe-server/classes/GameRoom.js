@@ -13,7 +13,7 @@ class GameRoom{
     this.host = hostPLayer;
     this.client = null;
     this.game = null;
-
+    this.scores = {};
     host.join(this.id, () => {
       host.emit('roomInit', this.getInfo());
     });
@@ -37,7 +37,7 @@ class GameRoom{
       this.host.socket.emit('gameInfo', `Client ${clientPLayer.name} connected`);
       if(this.isFull()){
         Logger.log(`room ${this.id} ready`);
-        this.startGame();
+        this.newGame(null, true);
       }
     });
   }
@@ -74,11 +74,24 @@ class GameRoom{
   startGame(){
     this.host.socket.emit('roomReady', this.getInfo(true));
     this.client.socket.emit('roomReady', this.getInfo(false));
-    this.game = new Game(this.host, this.client);
 
     this.host.socket.emit('gameInfo', `Game started`);
     this.client.socket.emit('gameInfo', `Game started`);
     Logger.log(`New Game in room ${this.id} started`);
+  }
+  newGame(client, root = false){
+    if(this.host && this.client) {
+      if(root || this.host.id === (client.id).toString()){
+        this.game = new Game(this.host, this.client, this);
+        this.startGame();
+      }
+      else{
+        throw new GameRoomException(`You can't start new game in this room!`);
+      }
+    }
+    else{
+      throw new GameRoomException(`newGame create error, room not full`);
+    }
   }
   stopGame(){
     this.game = null;
@@ -96,12 +109,18 @@ class GameRoom{
     }
     this.game.move(row, cell, client);
   }
+  upScore(playerId){
+    this.scores[playerId] = this.scores[playerId] ? this.scores[playerId]+1 : 1;
+    this.host.socket.emit('roomReady', this.getInfo(true));
+    this.client.socket.emit('roomReady', this.getInfo(false));
+  }
   getInfo(isHost = true){
     let info = {
       id: this.id,
       link: this.link,
       host: this.host ? this.host.getInfo(isHost) : null,
-      client: this.client ? this.client.getInfo(!isHost) : null
+      client: this.client ? this.client.getInfo(!isHost) : null,
+      scores: this.scores
     };
     return info;
   }

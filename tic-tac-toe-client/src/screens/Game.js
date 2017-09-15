@@ -3,7 +3,7 @@ import { Screen } from './Screen';
 import { Icon } from 'semantic-ui-react';
 import Players from '../components/Players/Players';
 import GameField from '../components/Field/Field';
-import { subscribeToUpdatePlayer } from '../api';
+import { subscribeToUpdatePlayer, newGame } from '../api';
 
 export default class Game extends React.Component {
   constructor() {
@@ -44,7 +44,7 @@ export default class Game extends React.Component {
     return <Screen
       active={ this.props.active }
       nav={<div>
-        <button className="b-top-nav__button left">
+        <button className="b-top-nav__button left" onClick={()=>newGame(this.props.roomId)}>
           <Icon name='arrow left' size="large" color="white"/>
         </button>
         <span className="c-level">
@@ -69,6 +69,7 @@ export default class Game extends React.Component {
             currentPlayerId={this.GetCurrentPlayerId()}
             currentPlayerMove={this.state.currentPlayerMove}
             isHost={this.iAmHost()}
+            scores={this.props.roomInfo ? this.props.roomInfo.scores : {} }
           />
         </div>
         <div className="b-game-interface__field">

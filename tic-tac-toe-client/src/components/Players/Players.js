@@ -8,6 +8,8 @@ class Player extends React.Component {
       <div className="b-player__name" >
         <span>
           { this.props.current ? 'You (' + this.props.name + ')' : this.props.name }
+          <br/>
+          {'Score ' + this.props.score}
         </span>
       </div>
       <div className="b-player__avatar" >
@@ -51,6 +53,7 @@ export default class Players extends React.Component {
         current = { player.current }
         marker = { player.marker }
         position = { player.isHost ? 'host' : 'client' }
+        score = { this.props.scores[player.id] ? this.props.scores[player.id] : 0}
       />;
     });
     return (<div className="b-players">

@@ -41,10 +41,18 @@ function subscribeToUpdatePlayer(cb) {
   });
 }
 
+// TODO added board
 function subscribeToGameEnd(cb) {
   socket.on('gameEnd', (PlayerID) => {
     console.log('winner' + PlayerID);
     cb(null, PlayerID);
+  });
+}
+
+function newGame(roomId, cb) {
+  console.log('new game');
+  socket.emit('newGame', roomId, () =>{
+    cb();
   });
 }
 
@@ -86,7 +94,7 @@ function onSuccess(cb) {
   });
 }
 
-export { connect,
+export { newGame, connect,
   subscribeToUpdate, subscribeToUpdatePlayer,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,

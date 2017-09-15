@@ -2,7 +2,7 @@ let { MARKERS } = require('./Marker');
 let { Logger } = require('./Logger');
 
 class Game{
-  constructor(player1, player2) {
+  constructor(player1, player2, room = null) {
     let defaultField = [
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
@@ -14,7 +14,9 @@ class Game{
     this.player1 = player1;
     this.player2 = player2;
     this.field = defaultField;
+    this.room = room;
 
+    this.updateField();
     this.updateCurrentMovePlayer(player1);
     Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
   }
@@ -109,6 +111,7 @@ class Game{
    * bool
    */
   isEnd(){
+    //TODO add tie checker
     if( !this.moves() ) {
       Logger.log(`All busy`);
       return true;
@@ -120,6 +123,10 @@ class Game{
       Logger.log(e.message);
       return true;
     }
+  }
+  updateField(){
+    this.player1.socket.emit('updateField', this.field);
+    this.player2.socket.emit('updateField', this.field);
   }
   move(row, cell, client){
     if (this.isEnd()) {
@@ -138,8 +145,7 @@ class Game{
       throw new GameException(`don't exist any empty cell`);
     }
     this.field[row][cell] = this.currentMovePlayer.marker;
-    this.player1.socket.emit('updateField', this.field);
-    this.player2.socket.emit('updateField', this.field);
+    this.updateField();
     Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
 
     if (this.isEnd()) {
@@ -150,6 +156,7 @@ class Game{
       if(winnerId !== -1) {
         this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
         this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
+        this.room ? this.room.upScore(winnerId): '';
       }
       else{
         this.player1.socket.emit('gameSuccess', `tie`);

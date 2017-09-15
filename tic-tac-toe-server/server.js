@@ -43,6 +43,15 @@ io.on('connection', function (client) {
       client.emit('gameError', e.message);
     }
   });
+  client.on('newGame', (roomId) => {
+    try{
+      gameServer.getRoomById(roomId).newGame(client);
+    }
+    catch(e){
+      Logger.log(e.message);
+      client.emit('gameError', e.message);
+    }
+  });
 
   client.on('doStep', (roomId, row, cell, cb) => {
     try {
