@@ -10,7 +10,7 @@ class Marker{
 let MARKERS = {
   X: new Marker('x'),
   O: new Marker('o'),
-  // Undefined marker
+  // Default marker
   _: new Marker('_'),
 };
 

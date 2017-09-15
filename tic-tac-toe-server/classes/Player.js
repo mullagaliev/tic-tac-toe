@@ -5,12 +5,12 @@ class Player{
   constructor(client, marker = MARKERS.X) {
     let id = (client.id).toString();
     this.id = id;
-    this.name = "Andrew";
-    this.current = true;
+    this.name = id.toString().substr(0,6);
+    this.current = false;
     this.marker = marker;
     this.room = 1;
 
-    this.client = client;
+    this.socket = client;
 
     Logger.log(` Player ${this} created...`);
   }
@@ -25,6 +25,16 @@ class Player{
   }
   toString(){
     return `(Number: ${this.id}, Name: ${this.name}, Marker ${this.marker})`;
+  }
+  getInfo(isCurrent){
+    let info = {
+      id: this.id,
+      name: this.name,
+      current: isCurrent,
+      marker: this.marker.val,
+      room: this.room
+    };
+    return info;
   }
 }
 

@@ -25,11 +25,15 @@ class GameServer{
   }
   // OTHER
   connectPlayerToRoom(roomId, client){
+    let room = this.getRoomById(roomId);
+    room.connectPlayer(client);
+  }
+  getRoomById(roomId){
     let room = this.rooms[roomId];
     if(!room){
       throw new GameServerException(`Room ${roomId} not found (room not exists)`);
     }
-    room.connectPlayer(client);
+    return room;
   }
 }
 
