@@ -9,8 +9,10 @@ class Player extends React.Component {
         <span>
           { this.props.current ? 'You (' + this.props.name + ')' : this.props.name }
           <br/>
-          {'Score ' + this.props.score}
         </span>
+      </div>
+      <div className="b-player__score">
+        {this.props.score}
       </div>
       <div className="b-player__avatar" >
         <img src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/720/ninja-background-128.png" className="b-player__avatar-image"/>

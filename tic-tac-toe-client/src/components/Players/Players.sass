@@ -61,6 +61,7 @@
     margin-bottom: 14px
     color: white
     font-size: 14px
+    text-shadow: 2px 2px rgba(255, 0, 0, 0.5)
   &__avatar
     position: relative
     border-radius: 100%
@@ -75,6 +76,14 @@
       width: 70px
       height: 70px
       border-radius: 100%
+  &__score
+    position: absolute
+    bottom: 0
+    height: 20px
+    margin-bottom: 30px
+    font-size: 20px
+    color: white
+    text-shadow: 2px 2px rgba(255, 0, 0, 0.5)
   &__marker
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
     position: absolute
@@ -90,12 +99,16 @@
   @at-root &--host
     #{$parent}__avatar
       background-color: $color-player1
+    #{$parent}__score
+      right: -20px
     #{$parent}__marker
       left: 0
       right: initial
   @at-root &--client
     #{$parent}__avatar
       background-color: $color-player2
+    #{$parent}__score
+      left: -20px
     #{$parent}__marker
       right: 0
       left: initial

@@ -75,6 +75,7 @@ export default class Game extends React.Component {
         <div className="b-game-interface__field">
           <div className="b-game-field">
             <GameField roomId={this.props.roomId}
+              enable={this.GetCurrentPlayerId() === this.state.currentPlayerMove}
               marker={this.GetCurrentMarker()}
             />
           </div>

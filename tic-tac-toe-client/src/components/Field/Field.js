@@ -24,7 +24,8 @@ export default class Field extends React.Component {
     length: 4,
     roomId: null,
     roomInfo: null,
-    marker: '-'
+    marker: '-',
+    enable: false
   };
   // UpdateField(value, pos) {
   //   let field = this.state.field;
@@ -70,7 +71,7 @@ export default class Field extends React.Component {
         })}
       </div>;
     });
-    return <div className="table b-game-field__table b-game-field__inside">
+    return <div className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
       {field}
     </div>;
   }
