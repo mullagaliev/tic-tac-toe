@@ -26,11 +26,20 @@ export default class Players extends React.Component {
     count: 2, // - CountPlayers = 2
     players: [],
     currentPlayerId: null,
-    currentPlayerMove: null
+    currentPlayerMove: null,
+    isHost: null
   };
 
   constructor() {
     super();
+  }
+  currentPositionLoader() {
+    let position = 1;
+    if ((this.props.isHost && this.props.currentPlayerMove !== this.props.currentPlayerId) ||
+    (!this.props.isHost && this.props.currentPlayerMove === this.props.currentPlayerId)) {
+      position = 2;
+    }
+    return position;
   }
   render() {
     let players = this.props.players.map((player) => {
@@ -41,19 +50,19 @@ export default class Players extends React.Component {
         active = { player.id === this.props.currentPlayerMove }
         current = { player.current }
         marker = { player.marker }
-        position = { player.position }
+        position = { player.isHost ? 'host' : 'client' }
       />;
     });
     return (<div className="b-players">
       <div className="b-players__list">
         {players}
       </div>
-      <div className="b-players__current" value={this.props.currentPlayerMove}>
+      <div className="b-players__current" value={ this.currentPositionLoader() }>
         <Popup
           trigger={<div className="c-current">
             <Icon loading name='spinner' size="big" color="white"/>
           </div>}
-          content={ this.props.currentPlayerMove === -1 ? 'Сервер думает' : 'Игрок думает' }
+          content={ this.props.currentPlayerMove === this.props.currentPlayerId ? 'Ваш ход' : 'Игрок думает' }
           position='top center'
         />
       </div>

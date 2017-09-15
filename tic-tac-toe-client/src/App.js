@@ -6,8 +6,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { Menu } from './screens/Menu';
 import { Game } from './screens/Game';
 import { Alerter } from './components/Alert/Alert';
-
-import { subscribeToRoomInit, subscribeToRoomReady } from './api';
+import { subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy } from './api';
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -23,6 +22,13 @@ class App extends Component {
       console.log(roomInfo);
       if (!err) {
         this.setState({ roomInfo: roomInfo });
+      }
+    });
+    subscribeToRoomDestroy((err, room)=>{
+      console.log('DESTROY!!');
+      console.log(room);
+      if (!err) {
+        // this.setState({ roomInfo: roomInfo });
       }
     });
     subscribeToRoomReady((err, roomInfo)=>{

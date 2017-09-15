@@ -32,6 +32,14 @@ export default class Game extends React.Component {
     }
     return playerId;
   }
+  iAmHost() {
+    let roomInfo = this.props.roomInfo;
+    let result = false;
+    if (roomInfo && roomInfo.host) {
+      result = this.GetCurrentPlayerId() === roomInfo.host.id;
+    }
+    return result;
+  }
   render() {
     return <Screen
       active={ this.props.active }
@@ -60,6 +68,7 @@ export default class Game extends React.Component {
           <Players players={this.props.players}
             currentPlayerId={this.GetCurrentPlayerId()}
             currentPlayerMove={this.state.currentPlayerMove}
+            isHost={this.iAmHost()}
           />
         </div>
         <div className="b-game-interface__field">

@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import AlertContainer from 'react-alert';
 import { onError, onInfo, onSuccess } from '../../api';
+import Sound from 'react-sound';
 
 export default class Alerter extends React.Component {
   alertOptions = {
@@ -14,7 +15,17 @@ export default class Alerter extends React.Component {
   constructor() {
     super();
     onError((err, msg)=>{
-      this.msg.show(msg, {
+      this.msg.show(<div>
+        <span>{msg}</span>
+        <Sound
+          url="http://www.debeier.nl/soundmanager/demo/mpc/audio/CRASH_1.mp3"
+          playStatus={Sound.status.PLAYING}
+          playFromPosition={0 /* in milliseconds */}
+          onLoading={this.handleSongLoading}
+          onPlaying={this.handleSongPlaying}
+          onFinishedPlaying={this.handleSongFinishedPlaying}
+        />
+      </div>, {
         time: 5000,
         type: 'error',
         icon: <Icon name="warning circle" size="large" color="red" />

@@ -2,14 +2,14 @@ let { Logger } = require('./Logger');
 let { MARKERS } = require('./Marker');
 
 class Player{
-  constructor(client, marker = MARKERS.X) {
+  constructor(client, marker = MARKERS.X, isHost = true) {
     let id = (client.id).toString();
     this.id = id;
     this.name = id.toString().substr(0,6);
     this.current = false;
     this.marker = marker;
     this.room = 1;
-
+    this.isHost = isHost;
     this.socket = client;
 
     Logger.log(` Player ${this} created...`);
@@ -32,7 +32,8 @@ class Player{
       name: this.name,
       current: isCurrent,
       marker: this.marker.val,
-      room: this.room
+      room: this.room,
+      isHost: this.isHost
     };
     return info;
   }

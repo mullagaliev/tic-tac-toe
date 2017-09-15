@@ -26,6 +26,14 @@ function subscribeToRoomReady(cb) {
   });
 }
 
+function subscribeToRoomDestroy(cb) {
+  console.log('subscribe to room destroy');
+  socket.on('roomDestroy', (room) => {
+    console.log('room desroy');
+    cb(null, room);
+  });
+}
+
 function subscribeToUpdatePlayer(cb) {
   socket.on('switchCurrentPlayer', (currentPlayerID) => {
     console.log('current' + currentPlayerID);
@@ -72,7 +80,7 @@ function onSuccess(cb) {
 
 export { connect,
   subscribeToUpdate,
-  subscribeToRoomInit, subscribeToRoomReady,
+  subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToUpdatePlayer,
   Move,
   onError, onInfo, onSuccess };

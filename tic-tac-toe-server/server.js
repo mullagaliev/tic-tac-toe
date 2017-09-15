@@ -37,7 +37,6 @@ io.on('connection', function (client) {
   client.on('connectToRoom', (roomId) => {
     try{
       gameServer.getRoomById(roomId).connectPlayer(client);
-      // gameServer.connectPlayerToRoom(roomId, client);
     }
     catch(e){
       Logger.log(e.message);
@@ -46,8 +45,8 @@ io.on('connection', function (client) {
   });
 
   client.on('doStep', (roomId, row, cell, cb) => {
-    let room = gameServer.getRoomById(roomId);
     try {
+      let room = gameServer.getRoomById(roomId);
       room.move(row, cell, client);
     }
     catch(e){
@@ -56,7 +55,7 @@ io.on('connection', function (client) {
     }
   });
   client.on('disconnect', function(){
-    gameServer.disconnectPlayer(id);
+    gameServer.disconnectPlayer(client);
   });
 });
 

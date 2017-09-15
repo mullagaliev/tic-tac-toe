@@ -1,56 +1,8 @@
 let { Logger } = require('./Logger');
 let { Player } = require('./Player');
+let { Game } = require('./Game');
+
 let { MARKERS } = require('./Marker');
-
-
-
-class Game{
-  constructor(player1, player2) {
-    let defaultField = [
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._]
-    ];
-    this.id = 111;
-    this.currentMovePlayer = null;
-    this.player1 = player1;
-    this.player2 = player2;
-    this.field = defaultField;
-
-    this.updateCurrentMovePlayer(player1);
-    Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
-  }
-  move(row, cell, client){
-    if(this.currentMovePlayer.id !== client.id){
-      throw new GameRoomException(`Not your turn`);
-    }
-    if(!this.field[row] || !this.field[row][cell]){
-      throw new GameRoomException(`Not exists row/cell`);
-    }
-    if( this.field[row][cell] !== MARKERS._ ){
-      throw new GameRoomException(`Cell is busy`);
-    }
-
-    this.field[row][cell] = this.currentMovePlayer.marker;
-    this.player1.socket.emit('updateField', this.field);
-    this.player2.socket.emit('updateField', this.field);
-    Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
-
-    this.updateCurrentMovePlayer();
-  }
-  updateCurrentMovePlayer(player = null){
-    if(player){
-      this.currentMovePlayer = player;
-    }
-    else{
-      this.currentMovePlayer = this.currentMovePlayer === this.player1 ? this.player2 : this.player1;
-    }
-    Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
-    this.player1.socket.emit('switchCurrentPlayer', this.currentMovePlayer.id);
-    this.player2.socket.emit('switchCurrentPlayer', this.currentMovePlayer.id);
-  }
-}
 
 class GameRoom{
   constructor(host) {
@@ -68,7 +20,7 @@ class GameRoom{
     Logger.log(`room (${this.id}) created for player ${idHost}`);
   }
   connectPlayer(client){
-    let clientPLayer = new Player(client, MARKERS.O);
+    let clientPLayer = new Player(client, MARKERS.O, false);
     if(this.host.id === clientPLayer.id){
       throw new GameRoomException(`Can't connect to yourself`);
     }
@@ -89,8 +41,32 @@ class GameRoom{
       }
     });
   }
+  // TODO rewrite ( until ащк all will be called destroy )
   disconnectPlayer(client){
-    
+    let idClient = (client.id).toString();
+    if(this.host && idClient === this.host.id){
+      this.destroyRoom();
+    }
+    else if(this.client && idClient === this.client.id) {
+      this.client = null;
+      // this.stopGame();
+      // TODO remove it
+      this.destroyRoom();
+    }
+    else{
+      throw new GameRoomException(`User not from room ${this.id}.`)
+    }
+  }
+  destroyRoom(){
+    this.stopGame();
+    if( this.host){
+      this.host.socket.emit('roomDestroy', []);
+    }
+    if(this.client){
+      this.client.socket.emit('roomDestroy', []);
+    }
+    Logger.log(`room ${this.id} destroy`);
+    // TODO Real destroy
   }
   isFull(){
     return this.host && this.client;
@@ -102,6 +78,17 @@ class GameRoom{
 
     this.host.socket.emit('gameInfo', `Game started`);
     this.client.socket.emit('gameInfo', `Game started`);
+    Logger.log(`New Game in room ${this.id} started`);
+  }
+  stopGame(){
+    this.game = null;
+    if (this.host) {
+      this.host.socket.emit('stopGame', []);
+    }
+    if (this.client) {
+      this.client.socket.emit('stopGame', []);
+    }
+    Logger.log(`Game in room ${this.id} stop`);
   }
   move(row, cell, client){
     if(!this.game){
