@@ -150,8 +150,8 @@ class Game{
 
     if (this.isEnd()) {
       let winnerId = this.getWinner();
-      this.player1.socket.emit('gameEnd', winnerId);
-      this.player2.socket.emit('gameEnd', winnerId);
+      this.player1.socket.emit('gameEnd', winnerId, true);
+      this.player2.socket.emit('gameEnd', winnerId, false);
       // TODO Tmp
       if(winnerId !== -1) {
         this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);

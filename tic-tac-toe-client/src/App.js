@@ -5,19 +5,27 @@ import './App.sass';
 // import { Icon } from 'semantic-ui-react';
 import { Menu } from './screens/Menu';
 import { Game } from './screens/Game';
+import { Endgame } from './screens/Endgame';
 import { Alerter } from './components/Alert/Alert';
-import { subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy } from './api';
+import { subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy, subscribeToGameEnd } from './api';
 
 let SCREENS = {
   MENU: { screen: 1 },
   SETTINGS: { screen: 2 },
-  GAME: { screen: 3 }
+  GAME: { screen: 3 },
+  WINNER: { screen: 4 }
 };
 
 class App extends Component {
   constructor() {
     super();
-    this.state = { currentScreen: SCREENS.MENU, roomInfo: null, players: [] };
+    this.state = { currentScreen: SCREENS.MENU,
+      roomInfo: null,
+      players: [],
+      stopGame: false,
+      winnerId: -1,
+      isHost: false
+    };
     subscribeToRoomInit((err, roomInfo)=>{
       console.log(roomInfo);
       if (!err) {
@@ -45,6 +53,9 @@ class App extends Component {
         this.setState({ currentScreen: SCREENS.GAME, roomInfo: roomInfo, players: players });
       }
     });
+    subscribeToGameEnd((err, winnerId, isHost)=>{
+      this.setState({ currentScreen: SCREENS.WINNER, winnerId: winnerId, isHost: isHost });
+    });
   }
   render() {
     return (
@@ -56,6 +67,12 @@ class App extends Component {
           roomInfo={this.state.roomInfo}
           roomId={this.state.roomInfo ? this.state.roomInfo.id : null}
           players={this.state.players}
+          stop={this.state.stopGame}
+        />
+        <Endgame active={ this.state.currentScreen === SCREENS.WINNER }
+          roomId={this.state.roomInfo ? this.state.roomInfo.id : null}
+          winnerId={ this.state.winnerId }
+          isHost={ this.state.isHost }
         />
       </div>
     );

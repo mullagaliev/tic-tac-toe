@@ -43,9 +43,9 @@ function subscribeToUpdatePlayer(cb) {
 
 // TODO added board
 function subscribeToGameEnd(cb) {
-  socket.on('gameEnd', (PlayerID) => {
+  socket.on('gameEnd', (PlayerID, isHost) => {
     console.log('winner' + PlayerID);
-    cb(null, PlayerID);
+    cb(null, PlayerID, isHost);
   });
 }
 

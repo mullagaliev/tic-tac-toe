@@ -41,6 +41,11 @@ export default class Game extends React.Component {
     }
     return result;
   }
+  getLevel() {
+    // TODO added
+    let level = 1;
+    return level;
+  }
   render() {
     return <Screen
       active={ this.props.active }
@@ -50,7 +55,7 @@ export default class Game extends React.Component {
         </button>
         <span className="c-level">
           <Icon name='trophy' size="large" color="white"/>
-          <span className="c-level__title">Level 4</span>
+          <span className="c-level__title">Level {this.getLevel()}</span>
         </span>
         {
           this.iAmHost() ? <button className="b-top-nav__button right" onClick={()=>newGame(this.props.roomId)}>

@@ -111,8 +111,8 @@ class GameRoom{
   }
   upScore(playerId){
     this.scores[playerId] = this.scores[playerId] ? this.scores[playerId]+1 : 1;
-    this.host.socket.emit('roomReady', this.getInfo(true));
-    this.client.socket.emit('roomReady', this.getInfo(false));
+    // this.host.socket.emit('roomReady', this.getInfo(true));
+    // this.client.socket.emit('roomReady', this.getInfo(false));
   }
   say(client, message){
     let idClient = (client.id).toString();
