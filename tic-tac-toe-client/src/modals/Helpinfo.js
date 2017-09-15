@@ -2,24 +2,31 @@ import React from 'react';
 import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 
 export default class Helpinfo extends React.Component {
-  static defaultProps = {
-    button: null
-  };
+  constructor() {
+    super();
+    this.state = { modalOpen: false };
+  }
+  handleOpen() {
+    this.setState({ modalOpen: true });
+  }
+  handleClose() {
+    this.setState({ modalOpen: false });
+  }
   render() {
     return (<Modal
-      trigger={<Button onClick={this.handleOpen}>Show Modal</Button>}
+      trigger={<Icon onClick={this.handleOpen.bind(this)} name='question circle outline' size="big" color="white"/>}
       open={this.state.modalOpen}
-      onClose={this.handleClose}
+      onClose={this.handleClose.bind(this)}
       basic
       size='small'
     >
-      <Header icon='browser' content='Cookies policy' />
+      <Header icon='child' content='Hello' />
       <Modal.Content>
-        <h3>This website uses cookies to ensure the best user experience.</h3>
+        <h3>This is my solution Evaluation Test for <a href="http://forasoft.com/en/" target="_blank">Forasoft</a></h3>
       </Modal.Content>
       <Modal.Actions>
-        <Button color='green' onClick={this.handleClose} inverted>
-          <Icon name='checkmark' /> Got it
+        <Button color='green' onClick={this.handleClose.bind(this)} inverted>
+          <Icon name='checkmark' /> I understood
         </Button>
       </Modal.Actions>
     </Modal>);
