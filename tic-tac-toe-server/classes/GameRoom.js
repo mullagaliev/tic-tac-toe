@@ -9,7 +9,7 @@ class GameRoom{
     let idHost = (host.id).toString();
     let hostPLayer = new Player(host);
     this.id = `room-${idHost}`;
-    this.link = 'http://localhost:3000/connect/'+this.id;
+    this.link = 'http://localhost:3000/connect/'+this.id; // TODO so bad
     this.host = hostPLayer;
     this.client = null;
     this.game = null;
