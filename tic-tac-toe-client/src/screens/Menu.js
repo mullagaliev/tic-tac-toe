@@ -50,18 +50,23 @@ export default class Menu extends React.Component {
             </div>
             <Divider horizontal className="white">Or</Divider>
             <div className="b-menu__item">
-              <Input
-                fluid
-                action={
-                  <Button color='blue'
-                    onClick={this.connect.bind(this)}>
-                    Connect
-                    <Icon name='chevron right'/>
-                  </Button>
-                }
-                value={this.state.connectString}
-                onChange={(event)=> this.setState({ connectString: event.target.value })}
-              />
+              <form onSubmit={(e)=>{
+                e.preventDefault();
+                this.connect();
+              }
+              }>
+                <Input
+                  fluid
+                  action={
+                    <Button type='submit' color='blue'>
+                      Connect
+                      <Icon name='chevron right'/>
+                    </Button>
+                  }
+                  value={this.state.connectString}
+                  onChange={(event)=> this.setState({ connectString: event.target.value })}
+                />
+              </form>
             </div>
           </div>
           <Grid columns={3}>

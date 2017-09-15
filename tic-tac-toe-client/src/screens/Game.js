@@ -3,6 +3,7 @@ import { Screen } from './Screen';
 import { Icon } from 'semantic-ui-react';
 import Players from '../components/Players/Players';
 import GameField from '../components/Field/Field';
+import Chat from '../components/Chat/Chat';
 import { subscribeToUpdatePlayer, newGame } from '../api';
 
 export default class Game extends React.Component {
@@ -51,9 +52,11 @@ export default class Game extends React.Component {
           <Icon name='trophy' size="large" color="white"/>
           <span className="c-level__title">Level 4</span>
         </span>
-        <button className="b-top-nav__button right">
-          <Icon className={'b-top-nav__button '} name='repeat' size="large" color="white"/>
-        </button>
+        {
+          this.iAmHost() ? <button className="b-top-nav__button right" onClick={()=>newGame(this.props.roomId)}>
+            <Icon name='refresh' size="large" color="white"/>
+          </button> : null
+        }
       </div>}
       content={<div className="b-game">
         <div className="b-game-interface__settings">
@@ -81,6 +84,7 @@ export default class Game extends React.Component {
           </div>
         </div>
       </div>}
+      footer={ <Chat roomId={this.props.roomId}/> }
     />;
   }
 }

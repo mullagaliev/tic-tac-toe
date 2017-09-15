@@ -70,6 +70,20 @@ function connect(link, cb) {
   cb();
 }
 
+function say(roomId, message, cb) {
+  console.log(roomId);
+  socket.emit('message', roomId, message, cb);
+  cb();
+}
+
+function onMessage(cb) {
+  console.log('subscribe to message chat');
+  socket.on('chatMessage', (msg) => {
+    console.log('new any message');
+    cb(null, msg);
+  });
+}
+
 function onError(cb) {
   console.log('subscribe to error init');
   socket.on('gameError', (msg) => {
@@ -99,4 +113,5 @@ export { newGame, connect,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,
   Move,
+  say, onMessage,
   onError, onInfo, onSuccess };

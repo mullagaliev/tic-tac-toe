@@ -34,6 +34,7 @@ io.on('connection', function (client) {
   tmpFlag = !tmpFlag;
 
   gameServer.connectPlayer(client);
+
   client.on('connectToRoom', (roomId) => {
     try{
       gameServer.getRoomById(roomId).connectPlayer(client);
@@ -43,6 +44,17 @@ io.on('connection', function (client) {
       client.emit('gameError', e.message);
     }
   });
+
+  client.on('message', (roomId, message) => {
+    try{
+      gameServer.getRoomById(roomId).say(client, message);
+    }
+    catch(e){
+      Logger.log(e.message);
+      client.emit('gameError', e.message);
+    }
+  });
+
   client.on('newGame', (roomId) => {
     try{
       gameServer.getRoomById(roomId).newGame(client);
@@ -63,6 +75,7 @@ io.on('connection', function (client) {
       client.emit('gameError', e.message);
     }
   });
+
   client.on('disconnect', function(){
     gameServer.disconnectPlayer(client);
   });

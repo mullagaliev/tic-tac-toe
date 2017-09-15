@@ -114,6 +114,17 @@ class GameRoom{
     this.host.socket.emit('roomReady', this.getInfo(true));
     this.client.socket.emit('roomReady', this.getInfo(false));
   }
+  say(client, message){
+    let idClient = (client.id).toString();
+    let name = idClient.substr(0,5);
+    if( (this.host && this.host.id === idClient) || (this.client && this.client.id === idClient) ){
+      this.client ? this.client.socket.emit('chatMessage', `${name}: ${message}`) : '';
+      this.host ? this.host.socket.emit('chatMessage', `${name}: ${message}` ) : '';
+    }
+    else{
+      throw new GameChatException(`You can't send message to the room`);
+    }
+  }
   getInfo(isHost = true){
     let info = {
       id: this.id,
@@ -133,6 +144,13 @@ class GameRoomException{
   constructor(message) {
     this.message = message;
     this.name = "Game room Exception";
+  }
+}
+
+class GameChatException{
+  constructor(message) {
+    this.message = message;
+    this.name = "Game chat Exception";
   }
 }
 
