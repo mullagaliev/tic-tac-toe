@@ -1,13 +1,8 @@
 import React from 'react';
 import { Icon, Popup } from 'semantic-ui-react';
 import './Players.sass';
-import { subscribeToSwitchCurrentPlayer } from '../../api';
-
 
 class Player extends React.Component {
-  static defaultProps = {
-    count: 2 // - CountPlayers = 2
-  };
   render() {
     return (<div className={'b-player b-player--' + this.props.position + (this.props.active ? ' current' : '') } key={this.props.id}>
       <div className="b-player__name" >
@@ -28,55 +23,37 @@ class Player extends React.Component {
 
 export default class Players extends React.Component {
   static defaultProps = {
-    count: 2 // - CountPlayers = 2
+    count: 2, // - CountPlayers = 2
+    players: [],
+    currentPlayerId: null,
+    currentPlayerMove: null
   };
 
   constructor() {
     super();
-    let persons = [
-      {
-        id: 1,
-        name: 'Andrew',
-        current: true,
-        marker: 'x',
-        position: 'host'
-      },
-      {
-        id: 2,
-        name: 'Richard',
-        current: false,
-        marker: 'o',
-        position: 'client'
-      }
-    ];
-    this.state = { currentPlayer: -1, persons: persons };
-    subscribeToSwitchCurrentPlayer((err, current) => {
-      console.log(current);
-      this.setState({ currentPlayer: current });
-    });
   }
   render() {
-    let players = this.state.persons.map((person, key) => {
+    let players = this.props.players.map((player) => {
       return <Player
-        key = { person.id }
-        id = { person.id }
-        name = { person.name }
-        active = { key === (this.state.currentPlayer - 1) }
-        current = { person.current }
-        marker = { person.marker }
-        position = { person.position }
+        key = { player.id }
+        id = { player.id }
+        name = { player.name }
+        active = { player.id === this.props.currentPlayerMove }
+        current = { player.current }
+        marker = { player.marker }
+        position = { player.position }
       />;
     });
     return (<div className="b-players">
       <div className="b-players__list">
         {players}
       </div>
-      <div className="b-players__current" value={this.state.currentPlayer}>
+      <div className="b-players__current" value={this.props.currentPlayerMove}>
         <Popup
           trigger={<div className="c-current">
             <Icon loading name='spinner' size="big" color="white"/>
           </div>}
-          content={ this.state.currentPlayer === -1 ? 'Сервер думает' : 'Игрок думает' }
+          content={ this.props.currentPlayerMove === -1 ? 'Сервер думает' : 'Игрок думает' }
           position='top center'
         />
       </div>

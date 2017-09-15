@@ -2,11 +2,21 @@ import React from 'react';
 import { Screen } from './Screen';
 import { Input, Button, Divider, Icon, Grid } from 'semantic-ui-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { connect } from '../api';
+
 
 export default class Menu extends React.Component {
+  static defaultProps = {
+    link: null
+  };
   constructor() {
     super();
-    this.state = { link: 'http://ww.short.url/c0opq', copied: false };
+    this.state = { connectString: 'http://ww.short.url/c0opq',
+      copied: false };
+  }
+  connect() {
+    connect(this.state.connectString, () =>{
+    });
   }
   render() {
     return <Screen
@@ -17,12 +27,10 @@ export default class Menu extends React.Component {
           <h1 className="welcome">
            Welcome!
           </h1>
-          <div className="b-logo">
-            <img src="icon.png" alt=""/>
-          </div>
+          <div className="b-logo"></div>
           <div className="b-menu__list">
             <div className="b-menu__item">
-              <CopyToClipboard text={this.state.link}
+              <CopyToClipboard text={this.props.link}
                 onCopy={() => {
                   this.setState({ copied: true });
                   setTimeout(() => { this.setState({ copied: false }); }, 3000);
@@ -31,7 +39,7 @@ export default class Menu extends React.Component {
                 <Button fluid primary animated='vertical'>
                   <Button.Content visible>
                     <Icon name='linkify' />
-                    {this.state.link}
+                    {this.props.link}
                   </Button.Content>
                   <Button.Content hidden>
                     <Icon name='copy' />
@@ -44,8 +52,15 @@ export default class Menu extends React.Component {
             <div className="b-menu__item">
               <Input
                 fluid
-                action={{ color: 'blue', labelPosition: 'right', icon: 'chevron right', content: 'Connect ' }}
-                defaultValue=''
+                action={
+                  <Button color='blue'
+                    onClick={this.connect.bind(this)}>
+                    Connect
+                    <Icon name='chevron right'/>
+                  </Button>
+                }
+                value={this.state.connectString}
+                onChange={(event)=> this.setState({ connectString: event.target.value })}
               />
             </div>
           </div>

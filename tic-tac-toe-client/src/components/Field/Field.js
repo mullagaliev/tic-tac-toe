@@ -2,8 +2,7 @@ import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import _ from 'lodash';
 import './Field.sass';
-import { subscribeToUpdate, doStep } from '../../api';
-
+import { subscribeToUpdate, Move } from '../../api';
 
 class Cell extends React.Component {
   static defaultProps = {
@@ -12,15 +11,8 @@ class Cell extends React.Component {
   constructor() {
     super();
   }
-  onClick() {
-    // this.props.onChange(this);
-    let row = this.props.row;
-    let cell = this.props.cell;
-    // let value = this.props.value;
-    doStep(row, cell, ()=>{ console.log(1); });
-  }
   render() {
-    return (<div className="td c-mark" value={this.props.value} onClick={this.onClick.bind(this)}>
+    return (<div className="td c-mark" value={this.props.value} onClick={this.props.onClick}>
       <Icon className="c-mark__x" name='remove' size="big" color="pink"/>
       <Icon className="c-mark__o" name='circle thin' size="big" color="blue"/>
     </div>);
@@ -29,7 +21,10 @@ class Cell extends React.Component {
 
 export default class Field extends React.Component {
   static defaultProps = {
-    length: 4
+    length: 4,
+    roomId: null,
+    roomInfo: null,
+    marker: '-'
   };
   // UpdateField(value, pos) {
   //   let field = this.state.field;
@@ -37,20 +32,23 @@ export default class Field extends React.Component {
   //   field[pos[0]][pos[1]] = value;
   //   this.setState({ field: field });
   // }
-  UpdateCell(x, y, value) {
+  UpdateCell(x, y) {
     let field = this.state.field;
-    field[x][y] = value;
+    field[x][y] = this.props.marker;
     this.setState({ field: field });
   }
-  onMarkSelect(cell) {
-    console.log(cell);
-    this.UpdateCell(cell.props.position[0], cell.props.position[1], 'x');
+  onMove(row, cell) {
+    console.log(row, cell);
+    Move(this.props.roomId, row, cell, ()=>{ console.log(1); });
+    this.UpdateCell(row, cell);
   }
   constructor() {
     super();
     let length = 4;
     let defaultField = _.times(length, ()=>{
-      return _.times(length, ' ');
+      return _.times(length, () => {
+        return { val: '_' };
+      });
     });
     this.state = { currentPlayer: -1, field: defaultField };
     subscribeToUpdate((err, field) => {
@@ -59,7 +57,6 @@ export default class Field extends React.Component {
   }
   render() {
     // let fieldLength = this.props.length;
-
     let field = this.state.field.map((row, keyI) => {
       return <div className="tr" key={keyI}>
         { row.map((cell, keyJ) =>{
@@ -67,8 +64,8 @@ export default class Field extends React.Component {
             key={keyJ}
             row={keyI}
             cell={keyJ}
-            value={cell}
-            onChange={this.onMarkSelect.bind(this)}/>);
+            value={cell.val}
+            onClick={() => this.onMove.bind(this)(keyI, keyJ)}/>);
         })}
       </div>;
     });

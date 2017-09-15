@@ -3,10 +3,34 @@ import { Screen } from './Screen';
 import { Icon } from 'semantic-ui-react';
 import Players from '../components/Players/Players';
 import GameField from '../components/Field/Field';
+import { subscribeToUpdatePlayer } from '../api';
 
 export default class Game extends React.Component {
   constructor() {
     super();
+    this.state = { currentPlayerMove: null };
+    subscribeToUpdatePlayer((err, current) => {
+      console.log(current);
+      if (!err) {
+        this.setState({ currentPlayerMove: current });
+      }
+    });
+  }
+  GetCurrentMarker() {
+    let roomInfo = this.props.roomInfo;
+    let marker = '-';
+    if (roomInfo && roomInfo.host && roomInfo.client) {
+      marker = roomInfo.host.current ? roomInfo.host.marker : roomInfo.client.marker;
+    }
+    return marker;
+  }
+  GetCurrentPlayerId() {
+    let roomInfo = this.props.roomInfo;
+    let playerId = null;
+    if (roomInfo && roomInfo.host && roomInfo.client) {
+      playerId = roomInfo.host.current ? roomInfo.host.id : roomInfo.client.id;
+    }
+    return playerId;
   }
   render() {
     return <Screen
@@ -33,11 +57,16 @@ export default class Game extends React.Component {
           </button>
         </div>
         <div className="b-game-interface__info">
-          <Players/>
+          <Players players={this.props.players}
+            currentPlayerId={this.GetCurrentPlayerId()}
+            currentPlayerMove={this.state.currentPlayerMove}
+          />
         </div>
         <div className="b-game-interface__field">
           <div className="b-game-field">
-            <GameField />
+            <GameField roomId={this.props.roomId}
+              marker={this.GetCurrentMarker()}
+            />
           </div>
         </div>
       </div>}
