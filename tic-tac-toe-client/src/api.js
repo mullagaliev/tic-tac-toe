@@ -41,6 +41,13 @@ function subscribeToUpdatePlayer(cb) {
   });
 }
 
+function subscribeToGameEnd(cb) {
+  socket.on('gameEnd', (PlayerID) => {
+    console.log('winner' + PlayerID);
+    cb(null, PlayerID);
+  });
+}
+
 function Move(roomId, row, cell, cb) {
   console.log('do step');
   socket.emit('doStep', roomId, row, cell, () =>{
@@ -80,8 +87,8 @@ function onSuccess(cb) {
 }
 
 export { connect,
-  subscribeToUpdate,
+  subscribeToUpdate, subscribeToUpdatePlayer,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
-  subscribeToUpdatePlayer,
+  subscribeToGameEnd,
   Move,
   onError, onInfo, onSuccess };

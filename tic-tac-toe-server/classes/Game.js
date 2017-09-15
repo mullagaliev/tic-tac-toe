@@ -35,7 +35,8 @@ class Game{
       for(let keyCol = 0; keyCol <  field.length; keyCol++) {
         if( field[0][keyCol] === field[1][keyCol]
           && field[1][keyCol] === field[2][keyCol]
-          && field[2][keyCol] === field[3][keyCol] ){
+          && field[2][keyCol] === field[3][keyCol]
+          && field[0][keyCol] !== MARKERS._){
           return field[0][keyCol];
         }
       }
@@ -44,12 +45,14 @@ class Game{
     function getDiagonalWinnerMarker(field) {
       if( field[0][0] === field[1][1]
         && field[1][1] === field[2][2]
-        && field[2][2] === field[3][3] ){
+        && field[2][2] === field[3][3]
+        && field[0][0] !== MARKERS._){
         return field[0][0];
       }
       if( field[0][3] === field[1][2]
         && field[1][2] === field[2][1]
-        && field[2][1] === field[3][0] ){
+        && field[2][1] === field[3][0]
+        && field[0][3] !== MARKERS._){
         return field[0][3];
       }
       return MARKERS._;
@@ -144,8 +147,14 @@ class Game{
       this.player1.socket.emit('gameEnd', winnerId);
       this.player2.socket.emit('gameEnd', winnerId);
       // TODO Tmp
-      this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
-      this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
+      if(winnerId !== -1) {
+        this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
+        this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
+      }
+      else{
+        this.player1.socket.emit('gameSuccess', `tie`);
+        this.player2.socket.emit('gameSuccess', `tie`);
+      }
     }
     else{
       this.updateCurrentMovePlayer();
