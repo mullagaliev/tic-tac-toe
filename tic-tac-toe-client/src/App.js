@@ -6,6 +6,7 @@ import { Game } from './screens/Game';
 import { Endgame } from './screens/Endgame';
 import { Alerter } from './components/Alert/Alert';
 import { subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy, subscribeToGameEnd } from './api';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -77,4 +78,22 @@ class App extends Component {
   }
 }
 
-export default App;
+const Empty = () => (
+  <div>
+    <p>Hello! i am empty elem</p>
+  </div>
+);
+const newApp = () => (
+  <Router>
+    <div>
+      <Route exact path='/' component={App} />
+      <Route path='/menu' component={Empty} />
+      <Route path='/game' component={Empty} />
+      <Route path='/connect' component={Empty} />
+      <Route path='/game/end' component={Empty} />
+      <Route path='/manual' component={Empty} />
+    </div>
+  </Router>
+);
+
+export default newApp;
