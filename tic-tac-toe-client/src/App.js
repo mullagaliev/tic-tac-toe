@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
-// import { Icon } from 'semantic-ui-react';
 import { Menu } from './screens/Menu';
 import { Game } from './screens/Game';
 import { Endgame } from './screens/Endgame';
