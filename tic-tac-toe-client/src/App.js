@@ -35,7 +35,7 @@ class App extends Component {
       console.log('DESTROY!!');
       console.log(room);
       if (!err) {
-        // this.setState({ roomInfo: roomInfo });
+        //
       }
     });
     subscribeToRoomReady((err, roomInfo)=>{
@@ -78,22 +78,69 @@ class App extends Component {
   }
 }
 
-const Empty = () => (
-  <div>
-    <p>Hello! i am empty elem</p>
-  </div>
-);
-const newApp = () => (
-  <Router>
-    <div>
-      <Route exact path='/' component={App} />
-      <Route path='/menu' component={Empty} />
-      <Route path='/game' component={Empty} />
-      <Route path='/connect' component={Empty} />
-      <Route path='/game/end' component={Empty} />
-      <Route path='/manual' component={Empty} />
-    </div>
-  </Router>
-);
+class Empty extends React.Component {
+  render() {
+    return <div>
+      <p>Hello! i am empty elem</p>
+      {console.log(this.props.match.params.roomId)}
+    </div>;
+  }
+}
+
+
+class newApp extends React.Component {
+  // constructor() {
+  //   super();
+  //   this.state = { currentScreen: SCREENS.MENU,
+  //     roomInfo: null,
+  //     players: [],
+  //     stopGame: false,
+  //     winnerId: -1,
+  //     isHost: false
+  //   };
+  //   subscribeToRoomInit((err, roomInfo)=>{
+  //     console.log(roomInfo);
+  //     if (!err) {
+  //       this.setState({ roomInfo: roomInfo });
+  //     }
+  //   });
+  //   subscribeToRoomDestroy((err, room)=>{
+  //     console.log('DESTROY!!');
+  //     console.log(room);
+  //     if (!err) {
+  //       // browserHistory.push('/');
+  //     }
+  //   });
+  //   subscribeToRoomReady((err, roomInfo)=>{
+  //     console.log('room ready');
+  //     if (!err) {
+  //       console.log(roomInfo);
+  //       let players = [];
+  //       if (roomInfo.host) {
+  //         players.push(roomInfo.host);
+  //       }
+  //       if (roomInfo.client) {
+  //         players.push(roomInfo.client);
+  //       }
+  //       this.setState({ currentScreen: SCREENS.GAME, roomInfo: roomInfo, players: players });
+  //     }
+  //   });
+  //   subscribeToGameEnd((err, winnerId, isHost)=>{
+  //     this.setState({ currentScreen: SCREENS.WINNER, winnerId: winnerId, isHost: isHost });
+  //   });
+  // }
+  render() {
+    return <Router basename="/">
+      <div>
+        <Route exact path='/' component={App} />
+        <Route path='/menu' component={App} />
+        <Route path='/game' component={App} />
+        <Route path='/game/end' component={Empty} />
+        <Route path='/connect/:roomId' component={Empty} />
+        <Route path='/manual' component={Empty} />
+      </div>
+    </Router>;
+  }
+}
 
 export default newApp;
