@@ -43,6 +43,6 @@
 2. Установить зависимости
     > npm install
 3. Запустить React приложение
-    > node server.js
+    > npm start
 
 
