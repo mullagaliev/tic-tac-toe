@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-let ip = '192.168.88.27';
+let ip = 'localhost';
 const socket = io('http://' + ip + ':3001');
 
 function subscribeToUpdate(cb) {
