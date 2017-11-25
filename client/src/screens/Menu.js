@@ -1,5 +1,5 @@
 import React from 'react';
-import { Screen } from './Screen';
+import Screen from '../layouts/SimpleScreen';
 import { Input, Button, Divider, Icon, Grid } from 'semantic-ui-react';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from '../api';
@@ -9,11 +9,11 @@ export default class Menu extends React.Component {
   static defaultProps = {
     link: null
   };
-  constructor() {
-    super();
-    this.state = { connectString: '',
-      copied: false };
-  }
+  state = {
+    connectString: '',
+    copied: false
+  };
+
   connect() {
     connect(this.state.connectString, () =>{
     });
@@ -22,12 +22,12 @@ export default class Menu extends React.Component {
     return <Screen
       active={ this.props.active }
       blurBg={true}
-      content={
+      children={
         <div className="b-menu">
           <h1 className="welcome">
            Welcome!
           </h1>
-          <div className="b-logo"></div>
+          <div className="b-logo"/>
           <div className="b-menu__list">
             <div className="b-menu__item">
               <CopyToClipboard text={this.props.link}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Header, Icon, Modal } from 'semantic-ui-react';
 
-export default class Helpinfo extends React.Component {
+export default class HelpInfo extends React.Component {
   constructor() {
     super();
     this.state = { modalOpen: false };
@@ -33,4 +33,4 @@ export default class Helpinfo extends React.Component {
   }
 }
 
-export { Helpinfo };
+export { HelpInfo };

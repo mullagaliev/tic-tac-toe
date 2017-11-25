@@ -1,5 +1,5 @@
 import React from 'react';
-import { Screen } from './Screen';
+import Screen from '../layouts/SimpleScreen';
 import { Button, Icon, Grid } from 'semantic-ui-react';
 import { newGame } from '../api';
 
@@ -15,7 +15,7 @@ export default class Endgame extends React.Component {
   render() {
     return <Screen
       active={ this.props.active }
-      content={
+      children={
         <div className="b-menu">
           <h1 className="welcome">
             Player {this.props.winnerId} win!
