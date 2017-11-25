@@ -28,7 +28,7 @@
     
 ### Run
 1. Перейти в папку с клиентом 
-    > cd tic-tac-toe-client
+    > cd client
 2. Установить зависимости
      > npm install
 3. Запустить React приложение
@@ -39,7 +39,7 @@
 
 ### Run
 1. Перейти в папку с сервером 
-    > cd tic-tac-toe-server
+    > cd server
 2. Установить зависимости
     > npm install
 3. Запустить React приложение
