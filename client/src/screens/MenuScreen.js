@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Screen from '../layouts/SimpleScreen';
-import { Input, Button, Divider, Icon, Grid } from 'semantic-ui-react';
+import { Input, Button, Divider, Icon } from 'semantic-ui-react';
 import CopyButton from '../components/common/buttons/CopyButton/CopyButton';
+import Authors from '../components/static/Authors/Authors';
+import './MenuScreen.sass';
 
 class MenuScreen extends React.Component {
   state = {
@@ -43,31 +45,7 @@ class MenuScreen extends React.Component {
             </form>
           </div>
         </div>
-        <Grid columns={3}>
-          <Grid.Row className="b-author">
-            <Grid.Column>
-              <a href="https://dribbble.com/shots/2841696-X-O-Game-Design" target="_blank">
-                <div className="b-author__item">
-                  <Icon name='dribble' size='big'/>
-                </div>
-              </a>
-            </Grid.Column>
-            <Grid.Column>
-              <a href="https://github.com/vray1995" target="_blank">
-                <div className="b-author__item">
-                  <Icon name='github' size='big'/>
-                </div>
-              </a>
-            </Grid.Column>
-            <Grid.Column>
-              <a href="https://vk.com/vray1995" target="_blank">
-                <div className="b-author__item">
-                  <Icon name='vk' size='big'/>
-                </div>
-              </a>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
+        <Authors/>
       </div>
     </Screen>;
   }

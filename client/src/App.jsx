@@ -4,9 +4,10 @@ import './App.sass';
 import Alerter from './components/Alert/Alert';
 import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
-import { Endgame } from './screens/Endgame';
+import GameOverScreen from './screens/GameOverScreen';
 import {
   connect,
+  newGame,
   subscribeToRoomInit,
   subscribeToRoomReady,
   subscribeToRoomDestroy,
@@ -84,10 +85,11 @@ class newApp extends React.Component {
                 link={this.state.roomInfo ? this.state.roomInfo.link : null}/>);
           }
           }/>
-          <Route path='/game/end' component={() => {
-            return (<Endgame
+          <Route path='/game/over' component={() => {
+            return (<GameOverScreen
                 roomId={this.state.roomInfo ? this.state.roomInfo.id : null}
-                winnerId={ this.state.winnerId }
+                winnerName={ this.state.winnerId }
+                onNewGame={newGame}
                 isHost={ this.state.isHost }
             />);
           }}/>
