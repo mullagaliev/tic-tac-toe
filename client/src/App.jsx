@@ -2,10 +2,11 @@ import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
 import Alerter from './components/Alert/Alert';
-import { Menu } from './screens/Menu';
+import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
 import { Endgame } from './screens/Endgame';
 import {
+  connect,
   subscribeToRoomInit,
   subscribeToRoomReady,
   subscribeToRoomDestroy,
@@ -78,7 +79,9 @@ class newApp extends React.Component {
         <Alerter/>
         <Switch>
           <Route path='/menu' component={() => {
-            return (<Menu link={this.state.roomInfo ? this.state.roomInfo.link : null}/>);
+            return (<MenuScreen
+                onConnect={(url)=>connect(url, ()=>{})}
+                link={this.state.roomInfo ? this.state.roomInfo.link : null}/>);
           }
           }/>
           <Route path='/game/end' component={() => {
