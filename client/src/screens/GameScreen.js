@@ -3,7 +3,7 @@ import Screen from '../layouts/SimpleScreen';
 import { Icon } from 'semantic-ui-react';
 import Players from '../components/Players/Players';
 import GameField from '../components/Field/Field';
-import Chat from '../components/Chat/Chat';
+import ChatContainer from '../containers/Chat/ChatContainer';
 import HelpInfo from '../modals/HelpInfo';
 import { subscribeToUpdatePlayer, newGame } from '../api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
@@ -61,7 +61,7 @@ class GameScreen extends React.Component {
             role={ this.iAmHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT }
             level={ this.getLevel() }
             onNewGame={() => newGame(this.props.roomId) }/>}
-        footer={ <Chat roomId={this.props.roomId}/> }>
+        footer={ <ChatContainer roomId={this.props.roomId}/> }>
       <div className="b-game">
         <div className="b-game-interface__settings">
           <button className="left">
