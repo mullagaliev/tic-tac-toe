@@ -8,9 +8,11 @@ class Cell extends React.Component {
   static defaultProps = {
     value: '-'
   };
+
   constructor() {
     super();
   }
+
   render() {
     return (<div className="td c-mark" value={this.props.value} onClick={this.props.onClick}>
       <Icon className="c-mark__x" name='remove' size="big" color="pink"/>
@@ -38,16 +40,18 @@ export default class Field extends React.Component {
     field[x][y] = this.props.marker;
     this.setState({ field: field });
   }
+
   onMove(row, cell) {
     console.log(row, cell);
-    Move(this.props.roomId, row, cell, ()=>{
+    Move(this.props.roomId, row, cell, () => {
       this.UpdateCell(row, cell);
     });
   }
+
   constructor() {
     super();
     let length = 4;
-    let defaultField = _.times(length, ()=>{
+    let defaultField = _.times(length, () => {
       return _.times(length, () => {
         return { val: '_' };
       });
@@ -57,21 +61,23 @@ export default class Field extends React.Component {
       this.setState({ field: field });
     });
   }
+
   render() {
     // let fieldLength = this.props.length;
     let field = this.state.field.map((row, keyI) => {
       return <div className="tr" key={keyI}>
-        { row.map((cell, keyJ) =>{
+        { row.map((cell, keyJ) => {
           return (<Cell
-            key={keyJ}
-            row={keyI}
-            cell={keyJ}
-            value={cell.val}
-            onClick={() => this.onMove.bind(this)(keyI, keyJ)}/>);
+              key={keyJ}
+              row={keyI}
+              cell={keyJ}
+              value={cell.val}
+              onClick={() => this.onMove.bind(this)(keyI, keyJ)}/>);
         })}
       </div>;
     });
-    return <div className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
+    return <div
+        className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
       {field}
     </div>;
   }
