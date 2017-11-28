@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { say } from '../../api';
+import { say } from '../../services/game/api';
 import Chat from '../../components/Chat/Chat';
 
 class ChatContainer extends Component {

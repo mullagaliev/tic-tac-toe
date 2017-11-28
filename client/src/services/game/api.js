@@ -51,14 +51,14 @@ function subscribeToGameEnd(cb) {
 
 function newGame(roomId, cb) {
   console.log('new game');
-  socket.emit('newGame', roomId, () =>{
+  socket.emit('newGame', roomId, () => {
     cb();
   });
 }
 
 function Move(roomId, row, cell, cb) {
   console.log('do step');
-  socket.emit('doStep', roomId, row, cell, () =>{
+  socket.emit('doStep', roomId, row, cell, () => {
     cb();
   });
 }
@@ -108,10 +108,12 @@ function onSuccess(cb) {
   });
 }
 
-export { newGame, connect,
+export {
+  newGame, connect,
   subscribeToUpdate, subscribeToUpdatePlayer,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,
   Move,
   say, onMessage,
-  onError, onInfo, onSuccess };
+  onError, onInfo, onSuccess
+};

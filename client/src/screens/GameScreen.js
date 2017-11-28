@@ -3,7 +3,7 @@ import Screen from '../layouts/SimpleScreen';
 import Players from '../components/Players/Players';
 import GameFieldContainer from '../containers/Field/FieldContainer';
 import ChatContainer from '../containers/Chat/ChatContainer';
-import { subscribeToUpdatePlayer, newGame } from '../api';
+import { subscribeToUpdatePlayer, newGame } from '../services/game/api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
 

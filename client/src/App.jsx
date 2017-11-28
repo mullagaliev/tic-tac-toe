@@ -12,7 +12,7 @@ import {
   subscribeToRoomReady,
   subscribeToRoomDestroy,
   subscribeToGameEnd
-} from './api';
+} from './services/game/api';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 let SCREENS = {

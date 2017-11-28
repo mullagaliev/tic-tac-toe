@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import AlertContainer from 'react-alert';
-import { onError, onInfo, onSuccess, onMessage } from '../../api';
+import { onError, onInfo, onSuccess, onMessage } from '../../services/game/api';
 
 export default class Alerter extends React.Component {
   alertOptions = {

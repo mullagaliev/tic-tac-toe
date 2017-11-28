@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import Field from '../../components/Field/Field';
-import { Move } from '../../api';
+import { Move } from '../../services/game/api';
 import logger from '../../helpers/logger';
-import { subscribeToUpdate } from '../../api';
+import { subscribeToUpdate } from '../../services/game/api';
 
 
 const initField = (size = 4) => {
