@@ -1,7 +1,7 @@
 import React from 'react';
 import Screen from '../layouts/SimpleScreen';
 import Players from '../components/Players/Players';
-import GameField from '../components/Field/Field';
+import GameFieldContainer from '../containers/Field/FieldContainer';
 import ChatContainer from '../containers/Chat/ChatContainer';
 import { subscribeToUpdatePlayer, newGame } from '../api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
@@ -73,7 +73,7 @@ class GameScreen extends React.Component {
         </div>
         <div className="b-game-interface__field">
           <div className="b-game-field">
-            <GameField
+            <GameFieldContainer
                 roomId={this.props.roomId}
                 enable={this.GetCurrentPlayerId() === this.state.currentPlayerMove}
                 marker={this.GetCurrentMarker()}
