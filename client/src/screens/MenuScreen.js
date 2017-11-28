@@ -13,7 +13,7 @@ class MenuScreen extends React.Component {
   };
 
   render() {
-    return <Screen blurBg={true}>
+    return <Screen classBgName={'BgImage BgBlur'}>
       <div className="b-menu">
         <h1 className="welcome">
           Welcome!

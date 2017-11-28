@@ -55,6 +55,7 @@ class GameScreen extends React.Component {
   render() {
     return <Screen
         active={ this.props.active }
+        classBgName={'BgImage'}
         header={ <TopGameMenu
             role={ this.iAmHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT }
             level={ this.getLevel() }

@@ -19,23 +19,25 @@
   background-color: #383155
   padding: 5px 10px
 
-.bg-image
+.Bg
   position: absolute
   z-index: 2
   top: 0
   left: 0
   right: 0
   bottom: 0
-  background-image: url("https://i.pinimg.com/736x/03/0e/3f/030e3f42a21755fea30fc3f4ded04375--mobile-wallpaper-ios--wallpaper.jpg")
-  background-position: center center
-  background-size: 100%
-  background-repeat: no-repeat
-  &--blur
+  &Image
+    /* src https://i.pinimg.com/736x/03/0e/3f/030e3f42a21755fea30fc3f4ded04375--mobile-wallpaper-ios--wallpaper.jpg */
+    background-image: url("../static/bg.jpg")
+    background-position: center center
+    background-size: 100%
+    background-repeat: no-repeat
+  &Blur
     filter: blur(6px)
+
 .b-content
   z-index: 10
   position: relative
-  //padding: 30px 0px 30px
   height: 100%
 
 
@@ -67,8 +69,6 @@
     top: 0
     left: 0
     right: 0
-  //background-color: red
-  //opacity: 0.5
   &__field
     position: relative
     height: 50%
@@ -76,8 +76,6 @@
     left: 0
     right: 0
     overflow: hidden
-    //background-color: blue
     perspective: 600px
-//opacity: 0.5
 
 
