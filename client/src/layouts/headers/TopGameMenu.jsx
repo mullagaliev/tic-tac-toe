@@ -1,26 +1,37 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic-ui-react';
+import HelpInfo from '../../modals/HelpInfo';
+import LevelCounter from '../../components/common/Level/Level';
+import './TopGameMenu.sass';
+
 import PLAYERS_ROLES from '../../constants/playersRoles';
+
 
 class TopGameMenu extends Component {
   render() {
     const { role } = this.props;
+    const { onExit, onNewGame } = this.props;
     return (
-        <div>
-          <button className="b-top-nav__button left" onClick={this.props.onExit}>
+      <div className={'GameMenu'}>
+        <div className={'GameMenuMain'}>
+          <button className="left" onClick={onExit}>
             <Icon name='arrow left' size="large" color="white"/>
           </button>
-          <span className="c-level">
-          <Icon name='trophy' size="large" color="white"/>
-          <span className="c-level__title">Level {this.props.level}</span>
-        </span>
-          {
-            role === PLAYERS_ROLES.HOST ? <button className="b-top-nav__button right" onClick={this.props.onNewGame}>
-              <Icon name='refresh' size="large" color="white"/>
-            </button> : null
-          }
+          <LevelCounter level={this.props.level} className={'alignAbsMiddle'}/>
+          <button className="right" onClick={onNewGame} disabled={role !== PLAYERS_ROLES.HOST}>
+            <Icon name='refresh' size="large" color="white"/>
+          </button>
         </div>
+        <div className={'GameMenuAdditional'}>
+          <button className="left">
+            <HelpInfo />
+          </button>
+          <button className="right">
+            <Icon name='volume up' size="big" color="white"/>
+          </button>
+        </div>
+      </div>
     );
   }
 }

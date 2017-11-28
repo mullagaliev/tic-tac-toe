@@ -1,10 +1,8 @@
 import React from 'react';
 import Screen from '../layouts/SimpleScreen';
-import { Icon } from 'semantic-ui-react';
 import Players from '../components/Players/Players';
 import GameField from '../components/Field/Field';
 import ChatContainer from '../containers/Chat/ChatContainer';
-import HelpInfo from '../modals/HelpInfo';
 import { subscribeToUpdatePlayer, newGame } from '../api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
@@ -63,14 +61,6 @@ class GameScreen extends React.Component {
             onNewGame={() => newGame(this.props.roomId) }/>}
         footer={ <ChatContainer roomId={this.props.roomId}/> }>
       <div className="b-game">
-        <div className="b-game-interface__settings">
-          <button className="left">
-            <HelpInfo />
-          </button>
-          <button className="right">
-            <Icon name='volume up' size="big" color="white"/>
-          </button>
-        </div>
         <div className="b-game-interface__info">
           <Players
               players={this.props.players}
