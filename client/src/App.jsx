@@ -7,7 +7,6 @@ import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import {
   newGame,
-  subscribeToRoomDestroy,
   subscribeToGameEnd
 } from './services/game/api';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
@@ -41,13 +40,6 @@ class newApp extends React.Component {
       winnerId: -1,
       isHost: false
     };
-    subscribeToRoomDestroy((err, room) => {
-      console.log('DESTROY!!');
-      console.log(room);
-      if (!err) {
-        this.setState({ players: [] });
-      }
-    });
     subscribeToGameEnd((err, winnerId, isHost) => {
       this.setState({ currentScreen: SCREENS.WINNER, winnerId: winnerId, isHost: isHost });
     });

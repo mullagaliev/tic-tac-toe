@@ -34,11 +34,10 @@ function reducer(state = defaultState, action) {
     case 'updateField':
       return Object.assign({}, state, { field: action.data.field });
     case 'roomInit':
-      return Object.assign({}, state, { room: action.data });
     case 'roomReady':
       return Object.assign({}, state, { room: action.data });
     case 'roomDestroy':
-      return state;
+      return Object.assign({}, state, { room: null });
     default:
       return state;
   }

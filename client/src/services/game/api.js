@@ -10,30 +10,6 @@ function subscribeToUpdate(cb) {
   });
 }
 
-function subscribeToRoomInit(cb) {
-  console.log('subscribe to room init');
-  socket.on('roomInit', (room) => {
-    console.log('room init');
-    cb(null, room);
-  });
-}
-
-function subscribeToRoomReady(cb) {
-  console.log('subscribe to room ready');
-  socket.on('roomReady', (roomInfo) => {
-    console.log('room ready');
-    cb(null, roomInfo);
-  });
-}
-
-function subscribeToRoomDestroy(cb) {
-  console.log('subscribe to room destroy');
-  socket.on('roomDestroy', (room) => {
-    console.log('room desroy');
-    cb(null, room);
-  });
-}
-
 function subscribeToUpdatePlayer(cb) {
   socket.on('switchCurrentPlayer', (currentPlayerID) => {
     console.log('current' + currentPlayerID);
@@ -97,7 +73,6 @@ function onSuccess(cb) {
 export {
   newGame,
   subscribeToUpdate, subscribeToUpdatePlayer,
-  subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,
   say, onMessage,
   onError, onInfo, onSuccess
