@@ -38,9 +38,21 @@ io.on('connection', function (client) {
   client.on('action', (action) => {
     try{
       switch (action.type){
-      case 'connectToRoom':
-        const {roomId} = action.data;
-        gameServer.getRoomById(roomId).connectPlayer(client);
+        case 'connectToRoom': {
+          const {roomId} = action.data;
+          gameServer.getRoomById(roomId).connectPlayer(client);
+          break;
+        }
+        case 'doStep': {
+          const {roomId, row, cell} = action.data;
+          let room = gameServer.getRoomById(roomId);
+          room.move(row, cell, client);
+          break;
+        }
+        case 'disconnect': {
+          gameServer.disconnectPlayer(client);
+          break;
+        }
       }
     }
     catch(e){
@@ -68,19 +80,7 @@ io.on('connection', function (client) {
       client.emit('gameError', e.message);
     }
   });
-
-  client.on('doStep', (roomId, row, cell, cb) => {
-    try {
-      let room = gameServer.getRoomById(roomId);
-      room.move(row, cell, client);
-    }
-    catch(e){
-      Logger.log(e.message);
-      client.emit('gameError', e.message);
-    }
-  });
-
-  client.on('disconnect', function(){
+  client.on('disconnect', () => {
     gameServer.disconnectPlayer(client);
   });
 });

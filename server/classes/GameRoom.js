@@ -66,9 +66,11 @@ class GameRoom{
     this.stopGame();
     if( this.host){
       this.host.socket.emit('roomDestroy', []);
+      this.host.socket.emit('action', {type: 'roomDestroy', data: {}});
     }
     if(this.client){
       this.client.socket.emit('roomDestroy', []);
+      this.client.socket.emit('action', {type: 'roomDestroy', data: {}});
     }
     Logger.log(`room ${this.id} destroy`);
     // TODO Real destroy

@@ -37,6 +37,8 @@ function reducer(state = defaultState, action) {
       return Object.assign({}, state, { room: action.data });
     case 'roomReady':
       return Object.assign({}, state, { room: action.data });
+    case 'roomDestroy':
+      return state;
     default:
       return state;
   }

@@ -6,6 +6,7 @@ import ChatContainer from '../containers/Chat/ChatContainer';
 import { subscribeToUpdatePlayer, newGame } from '../services/game/api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
+import { connect } from 'react-redux';
 
 class GameScreen extends React.Component {
   constructor() {
@@ -52,6 +53,10 @@ class GameScreen extends React.Component {
     return level;
   }
 
+  componentWillUnmount() {
+    // this.props.dispatch({ type: 'disconnect', date: {} });
+  }
+
   render() {
     return <Screen
         active={ this.props.active }
@@ -85,4 +90,8 @@ class GameScreen extends React.Component {
   }
 }
 
-export default GameScreen;
+function mapStateToProps(state) {
+  return state;
+}
+
+export default connect(mapStateToProps)(GameScreen);

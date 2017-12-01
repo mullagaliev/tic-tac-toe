@@ -56,13 +56,6 @@ function newGame(roomId, cb) {
   });
 }
 
-function Move(roomId, row, cell, cb) {
-  console.log('do step');
-  socket.emit('doStep', roomId, row, cell, () => {
-    cb();
-  });
-}
-
 function say(roomId, message, cb) {
   console.log(roomId);
   socket.emit('message', roomId, message, cb);
@@ -106,7 +99,6 @@ export {
   subscribeToUpdate, subscribeToUpdatePlayer,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,
-  Move,
   say, onMessage,
   onError, onInfo, onSuccess
 };

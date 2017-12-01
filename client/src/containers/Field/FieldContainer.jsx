@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Field from '../../components/Field/Field';
-import { Move } from '../../services/game/api';
 import logger from '../../helpers/logger';
 
 
@@ -12,9 +11,19 @@ class FieldContainer extends Component {
   };
 
   didMove = (row, cell) => {
-    logger(`Start move with params row = ${row}, cell = ${cell}`);
-    Move(this.props.roomId, row, cell, () => {
+    const { roomId } = this.props;
+    const cb = () => {
       logger(`Success move with params row = ${row}, cell = ${cell}`);
+    };
+    logger(`Start move with params row = ${row}, cell = ${cell}`);
+    this.props.dispatch({
+      type: 'doStep',
+      data: {
+        roomId,
+        row,
+        cell,
+        cb
+      }
     });
     logger(`Finish move with params row = ${row}, cell = ${cell}`);
   };
@@ -22,10 +31,10 @@ class FieldContainer extends Component {
   render() {
     const { field } = this.props;
     return (
-      <Field
-        {...this.props}
-        field={field}
-        Move={this.didMove}/>
+        <Field
+            {...this.props}
+            field={field}
+            Move={this.didMove}/>
     );
   }
 }
