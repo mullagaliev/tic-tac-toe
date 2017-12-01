@@ -63,13 +63,6 @@ function Move(roomId, row, cell, cb) {
   });
 }
 
-function connect(link, cb) {
-  let roomId = link.split('/').slice(-1)[0];
-  console.log(roomId);
-  socket.emit('connectToRoom', roomId, cb);
-  cb();
-}
-
 function say(roomId, message, cb) {
   console.log(roomId);
   socket.emit('message', roomId, message, cb);
@@ -109,7 +102,7 @@ function onSuccess(cb) {
 }
 
 export {
-  newGame, connect,
+  newGame,
   subscribeToUpdate, subscribeToUpdatePlayer,
   subscribeToRoomInit, subscribeToRoomReady, subscribeToRoomDestroy,
   subscribeToGameEnd,

@@ -16,6 +16,11 @@ class GameRoom{
     this.scores = {};
     host.join(this.id, () => {
       host.emit('roomInit', this.getInfo());
+      const action = {
+        type: 'roomInit',
+        data:  this.getInfo()
+      };
+      host.emit('action', action);
     });
     Logger.log(`room (${this.id}) created for player ${idHost}`);
   }
@@ -74,6 +79,19 @@ class GameRoom{
   startGame(){
     this.host.socket.emit('roomReady', this.getInfo(true));
     this.client.socket.emit('roomReady', this.getInfo(false));
+
+    const actionHost = {
+      type: 'roomReady',
+      data:  this.getInfo(true)
+    };
+
+    const actionClient = {
+      type: 'roomReady',
+      data:  this.getInfo(false)
+    };
+
+    this.host.socket.emit('action', actionHost);
+    this.client.socket.emit('action', actionClient);
 
     this.host.socket.emit('gameInfo', `Game started`);
     this.client.socket.emit('gameInfo', `Game started`);

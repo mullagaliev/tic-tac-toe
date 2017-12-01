@@ -1,24 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import { connect } from 'react-redux';
 import Field from '../../components/Field/Field';
 import { Move } from '../../services/game/api';
 import logger from '../../helpers/logger';
-import { subscribeToUpdate } from '../../services/game/api';
 
-
-const initField = (size = 4) => {
-  return _.times(size, () => {
-    return _.times(size, () => {
-      return { val: '_' };
-    });
-  });
-};
 
 class FieldContainer extends Component {
   state = {
-    currentPlayer: -1,
-    field: initField(4)
+    currentPlayer: -1
   };
 
   didMove = (row, cell) => {
@@ -29,14 +19,8 @@ class FieldContainer extends Component {
     logger(`Finish move with params row = ${row}, cell = ${cell}`);
   };
 
-  componentDidMount() {
-    subscribeToUpdate((err, field) => {
-      this.setState({ field: field });
-    });
-  }
-
   render() {
-    const { field } = this.state;
+    const { field } = this.props;
     return (
       <Field
         {...this.props}
@@ -50,7 +34,14 @@ FieldContainer.propTypes = {
   roomId: PropTypes.string
 };
 FieldContainer.defaultProps = {
-  roomId: '-1'
+  roomId: '-1',
+  field: [[]]
 };
 
-export default FieldContainer;
+function mapStateToProps(state) {
+  return {
+    field: state.field
+  };
+}
+
+export default connect(mapStateToProps)(FieldContainer);

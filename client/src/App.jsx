@@ -6,14 +6,13 @@ import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import {
-  connect,
   newGame,
-  subscribeToRoomInit,
-  subscribeToRoomReady,
   subscribeToRoomDestroy,
   subscribeToGameEnd
 } from './services/game/api';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -42,31 +41,11 @@ class newApp extends React.Component {
       winnerId: -1,
       isHost: false
     };
-    subscribeToRoomInit((err, roomInfo) => {
-      console.log(roomInfo);
-      if (!err) {
-        this.setState({ roomInfo: roomInfo });
-      }
-    });
     subscribeToRoomDestroy((err, room) => {
       console.log('DESTROY!!');
       console.log(room);
       if (!err) {
         this.setState({ players: [] });
-      }
-    });
-    subscribeToRoomReady((err, roomInfo) => {
-      console.log('room ready');
-      if (!err) {
-        console.log(roomInfo);
-        let players = [];
-        if (roomInfo.host) {
-          players.push(roomInfo.host);
-        }
-        if (roomInfo.client) {
-          players.push(roomInfo.client);
-        }
-        this.setState({ currentScreen: SCREENS.GAME, roomInfo: roomInfo, players: players });
       }
     });
     subscribeToGameEnd((err, winnerId, isHost) => {
@@ -75,32 +54,41 @@ class newApp extends React.Component {
   }
 
   render() {
+    const { roomInfo, players } = this.props;
     return <Router basename="/">
       <div>
         <Alerter/>
         <Switch>
           <Route path='/menu' component={() => {
-            return (<MenuScreen
-                onConnect={(url)=>connect(url, ()=>{})}
-                link={this.state.roomInfo ? this.state.roomInfo.link : null}/>);
-          }
-          }/>
+            return ((players.length !== 2) ?
+                <MenuScreen
+                    onConnect={(url) => {
+                      let roomId = url.split('/').slice(-1)[0];
+                      console.log(roomId);
+                      const cb = () => {};
+                      this.props.dispatch({ type: 'connectToRoom', data: { roomId, cb } });
+                    }}
+                    link={roomInfo ? roomInfo.link : null}/>
+                :
+                <Redirect to="/game"/>);
+          }}/>
           <Route path='/game/over' component={() => {
             return (<GameOverScreen
-                roomId={this.state.roomInfo ? this.state.roomInfo.id : null}
+                roomId={roomInfo ? roomInfo.id : null}
                 winnerName={ this.state.winnerId }
                 onNewGame={newGame}
                 isHost={ this.state.isHost }
             />);
           }}/>
           <Route path='/game' component={() => {
-            return <GameScreen
-                active={ true }
-                roomInfo={this.state.roomInfo}
-                roomId={this.state.roomInfo ? this.state.roomInfo.id : null}
-                players={this.state.players}
-                stop={this.state.stopGame}
-            />;
+            return (players.length === 2) ?
+                <GameScreen
+                    active={ true }
+                    roomInfo={roomInfo}
+                    roomId={roomInfo ? roomInfo.id : null}
+                    players={players}
+                    stop={this.state.stopGame}
+                /> : <Redirect to='/menu'/>;
           }
           }/>
           <Route path='/connect/:roomId' component={Empty}/>
@@ -112,4 +100,22 @@ class newApp extends React.Component {
   }
 }
 
-export default newApp;
+newApp.defaultProps = {
+  roomInfo: null
+};
+
+function mapStateToProps(state) {
+  const players = [];
+  if (state.room.client) {
+    players.push(state.room.client);
+  }
+  if (state.room.host) {
+    players.push(state.room.host);
+  }
+  return {
+    roomInfo: state.room,
+    players: players
+  };
+}
+
+export default connect(mapStateToProps)(newApp);

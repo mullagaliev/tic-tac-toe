@@ -127,6 +127,15 @@ class Game{
   updateField(){
     this.player1.socket.emit('updateField', this.field);
     this.player2.socket.emit('updateField', this.field);
+    // for version with redux-socket.io
+    const action = {
+      type: 'updateField',
+      data: {
+        field: this.field
+      }
+    };
+    this.player1.socket.emit('action', action);
+    this.player2.socket.emit('action', action);
   }
   move(row, cell, client){
     if (this.isEnd()) {

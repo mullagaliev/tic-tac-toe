@@ -35,9 +35,13 @@ io.on('connection', function (client) {
 
   gameServer.connectPlayer(client);
 
-  client.on('connectToRoom', (roomId) => {
+  client.on('action', (action) => {
     try{
-      gameServer.getRoomById(roomId).connectPlayer(client);
+      switch (action.type){
+      case 'connectToRoom':
+        const {roomId} = action.data;
+        gameServer.getRoomById(roomId).connectPlayer(client);
+      }
     }
     catch(e){
       Logger.log(e.message);
