@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import AlertContainer from 'react-alert';
-import { onError, onInfo, onSuccess, onMessage } from '../../services/game/api';
+import { onError, onInfo, onSuccess } from '../../services/game/api';
 
 export default class Alerter extends React.Component {
   alertOptions = {
@@ -35,13 +35,6 @@ export default class Alerter extends React.Component {
         time: 3000,
         type: 'success',
         icon: <Icon name="birthday" size="large" color="green"/>
-      });
-    });
-    onMessage((err, msg) => {
-      this.msg.show(msg, {
-        time: 7000,
-        type: 'success',
-        icon: <Icon name="mail outline" size="large" color="green"/>
       });
     });
   }

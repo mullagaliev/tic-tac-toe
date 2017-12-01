@@ -3,10 +3,11 @@ import Screen from '../layouts/SimpleScreen';
 import Players from '../components/Players/Players';
 import GameFieldContainer from '../containers/Field/FieldContainer';
 import ChatContainer from '../containers/Chat/ChatContainer';
-import { subscribeToUpdatePlayer, newGame } from '../services/game/api';
+import { subscribeToUpdatePlayer } from '../services/game/api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
 import { connect } from 'react-redux';
+import { newGame } from '../actions';
 
 class GameScreen extends React.Component {
   constructor() {
@@ -64,7 +65,7 @@ class GameScreen extends React.Component {
         header={ <TopGameMenu
             role={ this.iAmHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT }
             level={ this.getLevel() }
-            onNewGame={() => newGame(this.props.roomId) }/>}
+            onNewGame={() => this.props.dispatch(newGame(this.props.roomId))}/>}
         footer={ <ChatContainer roomId={this.props.roomId}/> }>
       <div className="b-game">
         <div className="b-game-interface__info">

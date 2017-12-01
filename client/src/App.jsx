@@ -6,12 +6,11 @@ import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import {
-  newGame,
   subscribeToGameEnd
 } from './services/game/api';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import { newGame } from './actions';
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -47,6 +46,7 @@ class newApp extends React.Component {
 
   render() {
     const { roomInfo, players } = this.props;
+    const roomId = roomInfo ? roomInfo.id : null;
     return <Router basename="/">
       <div>
         <Alerter/>
@@ -55,10 +55,11 @@ class newApp extends React.Component {
             return ((players.length !== 2) ?
                 <MenuScreen
                     onConnect={(url) => {
-                      let roomId = url.split('/').slice(-1)[0];
-                      console.log(roomId);
-                      const cb = () => {};
-                      this.props.dispatch({ type: 'connectToRoom', data: { roomId, cb } });
+                      const roomIdForConnect = url.split('/').slice(-1)[0];
+                      console.log(roomIdForConnect);
+                      const cb = () => {
+                      };
+                      this.props.dispatch({ type: 'connectToRoom', data: { roomId: roomIdForConnect, cb } });
                     }}
                     link={roomInfo ? roomInfo.link : null}/>
                 :
@@ -68,7 +69,7 @@ class newApp extends React.Component {
             return (<GameOverScreen
                 roomId={roomInfo ? roomInfo.id : null}
                 winnerName={ this.state.winnerId }
-                onNewGame={newGame}
+                onNewGame={newGame(roomId)}
                 isHost={ this.state.isHost }
             />);
           }}/>
@@ -77,7 +78,7 @@ class newApp extends React.Component {
                 <GameScreen
                     active={ true }
                     roomInfo={roomInfo}
-                    roomId={roomInfo ? roomInfo.id : null}
+                    roomId={roomId}
                     players={players}
                     stop={this.state.stopGame}
                 /> : <Redirect to='/menu'/>;

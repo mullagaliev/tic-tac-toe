@@ -25,19 +25,28 @@ const defaultState = {
     roomInfo: null,
     players: []
   },
-  field: [[]]
+  field: [[]],
+  messages: []
 };
 
 function reducer(state = defaultState, action) {
   console.log(action);
   switch (action.type) {
+      /* FIELD */
     case 'updateField':
       return Object.assign({}, state, { field: action.data.field });
+      /* ROOM */
     case 'roomInit':
     case 'roomReady':
       return Object.assign({}, state, { room: action.data });
     case 'roomDestroy':
       return Object.assign({}, state, { room: null });
+      /* CHAT */
+    case 'newMessage': {
+      const newMessages = Object.assign([], state.messages);
+      newMessages.push(action.data.message);
+      return Object.assign({}, state, { messages: newMessages });
+    }
     default:
       return state;
   }

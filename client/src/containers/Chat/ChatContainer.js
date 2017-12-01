@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { say } from '../../services/game/api';
 import Chat from '../../components/Chat/Chat';
+import { connect } from 'react-redux';
 
 class ChatContainer extends Component {
   onSend = (message, cb) => {
+    const { roomId } = this.props;
     if (message) {
-      say(this.props.roomId, message, cb);
+      this.props.dispatch({ type: 'message', data: { roomId, message, cb } });
     }
   };
 
@@ -23,4 +24,10 @@ ChatContainer.defaultProps = {
   roomId: null
 };
 
-export default ChatContainer;
+function mapStateToProps(state) {
+  return {
+    messages: state.messages
+  };
+}
+
+export default connect(mapStateToProps)(ChatContainer);

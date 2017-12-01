@@ -137,9 +137,28 @@ class GameRoom{
   say(client, message){
     let idClient = (client.id).toString();
     let name = idClient.substr(0,5);
+
+    const serverTime = (new Date).toLocaleTimeString();
+
     if( (this.host && this.host.id === idClient) || (this.client && this.client.id === idClient) ){
-      this.client ? this.client.socket.emit('chatMessage', `${name}: ${message}`) : '';
-      this.host ? this.host.socket.emit('chatMessage', `${name}: ${message}` ) : '';
+      if(this.client) {
+        const action = {
+          type: 'newMessage',
+          data: {
+            message: `${serverTime} >> ${name}: ${message}`
+          }
+        };
+        this.client.socket.emit('action', action);
+      }
+      if(this.host) {
+        const action = {
+          type: 'newMessage',
+          data: {
+            message: `${serverTime} >> ${name}: ${message}`
+          }
+        };
+        this.host.socket.emit('action', action);
+      }
     }
     else{
       throw new GameChatException(`You can't send message to the room`);
