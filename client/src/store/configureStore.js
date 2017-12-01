@@ -1,29 +1,16 @@
 import { createStore, applyMiddleware } from 'redux';
 import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
-import _ from 'lodash';
-
 // import rootReducer from '../reducers';
 
 
-const initField = (size = 4) => {
-  return _.times(size, () => {
-    return _.times(size, () => {
-      return { val: '_' };
-    });
-  });
-};
-
-
 const defaultState = {
-  user: {
-    id: 134,
-    name: 'Andrew'
-  },
   room: {
-    field: initField(4),
-    roomInfo: null,
-    players: []
+    id: null,
+    client: null,
+    host: null,
+    link: '',
+    scores: []
   },
   field: [[]],
   messages: []
