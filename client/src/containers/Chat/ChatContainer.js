@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Chat from '../../components/Chat/Chat';
 import { connect } from 'react-redux';
+import { sendMessage } from '../../actions';
 
 class ChatContainer extends Component {
   onSend = (message, cb) => {
     const { roomId } = this.props;
     if (message) {
-      this.props.dispatch({ type: 'message', data: { roomId, message, cb } });
+      this.props.dispatch(sendMessage(roomId, message, cb));
     }
   };
 
