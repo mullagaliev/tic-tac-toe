@@ -39,6 +39,7 @@ function reducer(state = defaultState, action) {
   }
 }
 
+// TODO move to config
 const ip = 'localhost';
 const socket = io('http://' + ip + ':3001');
 let socketIoMiddleware = createSocketIoMiddleware(socket, '');

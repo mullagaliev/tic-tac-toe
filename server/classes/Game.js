@@ -1,5 +1,6 @@
 let { MARKERS } = require('./Marker');
 let { Logger } = require('./Logger');
+const nanoid = require('nanoid');
 
 class Game{
   constructor(player1, player2, room = null) {
@@ -9,7 +10,7 @@ class Game{
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._]
     ];
-    this.id = 111; // TODO add unic id
+    this.id = nanoid();
     this.currentMovePlayer = null;
     this.player1 = player1;
     this.player2 = player2;
@@ -88,8 +89,8 @@ class Game{
         return playerIdX;
       }
       else if(winnerMarker === MARKERS.O){
-        return playerIdO;
         Logger.log(`winner PlayerID - ${playerIdO}`);
+        return playerIdO;
       }
       else{
         throw new FatalGameException(`Undefined marker`);
