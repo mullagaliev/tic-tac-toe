@@ -10,7 +10,7 @@ import {
 } from './services/game/api';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { newGame } from './actions';
+import { newGame, connectToRoom } from './actions';
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -59,7 +59,7 @@ class newApp extends React.Component {
                       console.log(roomIdForConnect);
                       const cb = () => {
                       };
-                      this.props.dispatch({ type: 'connectToRoom', data: { roomId: roomIdForConnect, cb } });
+                      this.props.dispatch(connectToRoom(roomIdForConnect, cb));
                     }}
                     link={roomInfo ? roomInfo.link : null}/>
                 :
