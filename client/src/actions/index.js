@@ -6,3 +6,4 @@ export default function action(type, data = {}) {
 }
 
 export const newGame = (roomId) => action('newGame', { roomId });
+export const doStep = (roomId, row, cell, cb) => action('doStep', { roomId, row, cell, cb });
