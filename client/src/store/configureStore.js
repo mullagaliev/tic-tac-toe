@@ -44,7 +44,7 @@ function reducer(state = defaultState, action) {
       /* CHAT */
     case 'newMessage': {
       const newMessages = Object.assign([], state.messages);
-      newMessages.push(action.data.message);
+      newMessages.push(action.data);
       return Object.assign({}, state, { messages: newMessages });
     }
     default:

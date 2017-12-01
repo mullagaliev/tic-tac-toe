@@ -145,7 +145,9 @@ class GameRoom{
         const action = {
           type: 'newMessage',
           data: {
-            message: `${serverTime} >> ${name}: ${message}`
+            date: serverTime,
+            name: name,
+            message: message
           }
         };
         this.client.socket.emit('action', action);
@@ -154,7 +156,9 @@ class GameRoom{
         const action = {
           type: 'newMessage',
           data: {
-            message: `${serverTime} >> ${name}: ${message}`
+            date: serverTime,
+            name: name,
+            message: message
           }
         };
         this.host.socket.emit('action', action);
