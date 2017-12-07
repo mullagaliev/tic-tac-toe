@@ -22,7 +22,6 @@ class Empty extends React.Component {
   render() {
     return <div>
       <p>Hello! i am empty elem</p>
-      {console.log(this.props.match.params.roomId)}
     </div>;
   }
 }
@@ -53,18 +52,17 @@ class newApp extends React.Component {
         <Alerter/>
         <Switch>
           <Route path='/menu' component={() => {
-            return ((players.length !== 2) ?
-                <MenuScreen
-                    onConnect={(url) => {
-                      const roomIdForConnect = url.split('/').slice(-1)[0];
-                      console.log(roomIdForConnect);
-                      const cb = () => {
-                      };
-                      this.props.dispatch(connectToRoom(roomIdForConnect, cb));
-                    }}
-                    link={roomInfo ? roomInfo.link : null}/>
-                :
-                <Redirect to="/game"/>);
+            if (players.length === 2) {
+              return <Redirect to="/game"/>;
+            }
+            return <MenuScreen
+                onConnect={(url) => {
+                  const roomIdForConnect = url.split('/').slice(-1)[0];
+                  const cb = () => {
+                  };
+                  this.props.dispatch(connectToRoom(roomIdForConnect, cb));
+                }}
+                link={roomInfo ? roomInfo.link : null}/>;
           }}/>
           <Route path='/game/over' component={() => {
             if (gameStatus === GAME_STATUSES.STARTED) {
@@ -78,11 +76,11 @@ class newApp extends React.Component {
             />);
           }}/>
           <Route path='/game' component={() => {
-            if (gameStatus === GAME_STATUSES.FINISH) {
-              return <Redirect to='/game/over'/>;
-            }
             if (players.length !== 2) {
               return <Redirect to='/menu'/>;
+            }
+            if (gameStatus === GAME_STATUSES.FINISH) {
+              return <Redirect to='/game/over'/>;
             }
             return <GameScreen
                 active={ true }
@@ -93,7 +91,11 @@ class newApp extends React.Component {
             />;
           }
           }/>
-          <Route path='/connect/:roomId' component={Empty}/>
+          <Route path='/connect/:roomId' component={({ match }) => {
+            const roomIdForConnect = match.params.roomId;
+            this.props.dispatch(connectToRoom(roomIdForConnect, ()=>{}));
+            return <Redirect to='/game'/>;
+          }}/>
           <Route path='/manual' component={Empty}/>
           <Route path='/' component={Empty}/>
         </Switch>
@@ -108,11 +110,13 @@ newApp.defaultProps = {
 
 function mapStateToProps(state) {
   const players = [];
-  if (state.room.client) {
-    players.push(state.room.client);
-  }
-  if (state.room.host) {
-    players.push(state.room.host);
+  if (state.room) {
+    if (state.room.client) {
+      players.push(state.room.client);
+    }
+    if (state.room.host) {
+      players.push(state.room.host);
+    }
   }
   return {
     gameStatus: state.gameStatus,
