@@ -2,7 +2,7 @@ let { MARKERS } = require('./Marker');
 let { Logger } = require('./Logger');
 const nanoid = require('nanoid');
 
-class Game{
+class Game {
   constructor(player1, player2, room = null) {
     let defaultField = [
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
@@ -21,60 +21,64 @@ class Game{
     this.updateCurrentMovePlayer(player1);
     Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
   }
-  getWinner(){
-    if(!this.field) {
+
+  getWinner() {
+    if (!this.field) {
       return -1;
     }
     function getHorizontalWinnerMarker(field) {
-      let rows = field.filter((row)=>{
+      let rows = field.filter((row) => {
         return row[0] === row[1]
-          && row[1] === row[2]
-          && row[2] === row[3];
+            && row[1] === row[2]
+            && row[2] === row[3];
       });
       return rows[0] ? rows[0][0] : MARKERS._;
     }
+
     function getVerticalWinnerMarker(field) {
       // shit
-      for(let keyCol = 0; keyCol <  field.length; keyCol++) {
-        if( field[0][keyCol] === field[1][keyCol]
-          && field[1][keyCol] === field[2][keyCol]
-          && field[2][keyCol] === field[3][keyCol]
-          && field[0][keyCol] !== MARKERS._){
+      for (let keyCol = 0; keyCol < field.length; keyCol++) {
+        if (field[0][keyCol] === field[1][keyCol]
+            && field[1][keyCol] === field[2][keyCol]
+            && field[2][keyCol] === field[3][keyCol]
+            && field[0][keyCol] !== MARKERS._) {
           return field[0][keyCol];
         }
       }
       return MARKERS._;
     }
+
     function getDiagonalWinnerMarker(field) {
-      if( field[0][0] === field[1][1]
-        && field[1][1] === field[2][2]
-        && field[2][2] === field[3][3]
-        && field[0][0] !== MARKERS._){
+      if (field[0][0] === field[1][1]
+          && field[1][1] === field[2][2]
+          && field[2][2] === field[3][3]
+          && field[0][0] !== MARKERS._) {
         return field[0][0];
       }
-      if( field[0][3] === field[1][2]
-        && field[1][2] === field[2][1]
-        && field[2][1] === field[3][0]
-        && field[0][3] !== MARKERS._){
+      if (field[0][3] === field[1][2]
+          && field[1][2] === field[2][1]
+          && field[2][1] === field[3][0]
+          && field[0][3] !== MARKERS._) {
         return field[0][3];
       }
       return MARKERS._;
     }
-    let horizontalWinnerMarker  = getHorizontalWinnerMarker(this.field);
+
+    let horizontalWinnerMarker = getHorizontalWinnerMarker(this.field);
     let verticalWinnerMarker = getVerticalWinnerMarker(this.field);
     let diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
 
     let winnerMarker = MARKERS._;
-    if(horizontalWinnerMarker !== MARKERS._){
+    if (horizontalWinnerMarker !== MARKERS._) {
       winnerMarker = horizontalWinnerMarker;
     }
-    else if(verticalWinnerMarker !== MARKERS._){
+    else if (verticalWinnerMarker !== MARKERS._) {
       winnerMarker = verticalWinnerMarker;
     }
-    else if(diagonalWinnerMarker !== MARKERS._){
+    else if (diagonalWinnerMarker !== MARKERS._) {
       winnerMarker = diagonalWinnerMarker;
     }
-    else{
+    else {
       winnerMarker = MARKERS._;
     }
     let playerIdX = this.player1.marker === MARKERS.X ? this.player1.id : this.player2.id;
@@ -82,53 +86,53 @@ class Game{
 
     Logger.log(`Current game field status h - ${horizontalWinnerMarker} v - ${verticalWinnerMarker} d - ${diagonalWinnerMarker}`);
 
-    if( winnerMarker !== MARKERS._){
+    if (winnerMarker !== MARKERS._) {
       Logger.log(`winner marker - ${winnerMarker}`);
-      if(winnerMarker === MARKERS.X){
+      if (winnerMarker === MARKERS.X) {
         Logger.log(`winner PlayerID - ${playerIdX}`);
         return playerIdX;
       }
-      else if(winnerMarker === MARKERS.O){
+      else if (winnerMarker === MARKERS.O) {
         Logger.log(`winner PlayerID - ${playerIdO}`);
         return playerIdO;
       }
-      else{
+      else {
         throw new FatalGameException(`Undefined marker`);
       }
     }
     return -1;
   }
+
   /**
    * bool
    */
-  moves(){
-    return this.field.reduce((prev, row)=>{
-      return prev || row.reduce((prevCell, cell)=>{
-        return prevCell || (cell === MARKERS._);
-      }, false);
+  moves() {
+    return this.field.reduce((prev, row) => {
+      return prev || row.reduce((prevCell, cell) => {
+            return prevCell || (cell === MARKERS._);
+          }, false);
     }, false);
   }
+
   /**
    * bool
    */
-  isEnd(){
+  isEnd() {
     //TODO add tie checker
-    if( !this.moves() ) {
+    if (!this.moves()) {
       Logger.log(`All busy`);
       return true;
     }
-    try{
+    try {
       return this.getWinner() !== -1;
     }
-    catch(e){
+    catch (e) {
       Logger.log(e.message);
       return true;
     }
   }
-  updateField(){
-    this.player1.socket.emit('updateField', this.field);
-    this.player2.socket.emit('updateField', this.field);
-    // for version with redux-socket.io
+
+  updateField() {
     const action = {
       type: 'updateField',
       data: {
@@ -138,20 +142,21 @@ class Game{
     this.player1.socket.emit('action', action);
     this.player2.socket.emit('action', action);
   }
-  move(row, cell, client){
+
+  move(row, cell, client) {
     if (this.isEnd()) {
       throw new GameException(`Game ended`);
     }
-    if(this.currentMovePlayer.id !== client.id){
+    if (this.currentMovePlayer.id !== client.id) {
       throw new GameException(`Not your turn`);
     }
-    if(!this.field[row] || !this.field[row][cell]){
+    if (!this.field[row] || !this.field[row][cell]) {
       throw new GameException(`Not exists row/cell`);
     }
-    if( this.field[row][cell] !== MARKERS._ ){
+    if (this.field[row][cell] !== MARKERS._) {
       throw new GameException(`Cell is busy`);
     }
-    if(!this.moves()){
+    if (!this.moves()) {
       throw new GameException(`don't exist any empty cell`);
     }
     this.field[row][cell] = this.currentMovePlayer.marker;
@@ -168,22 +173,23 @@ class Game{
       };
       this.player1.socket.emit('action', action);
       this.player2.socket.emit('action', action);
-      if(winnerId !== -1) {
-        this.room ? this.room.upScore(winnerId): '';
+      if (winnerId !== -1) {
+        this.room ? this.room.upScore(winnerId) : '';
       }
     }
-    else{
+    else {
       this.updateCurrentMovePlayer();
     }
   }
-  updateCurrentMovePlayer(player = null){
-    if(player){
-      if(player !== this.player1 && player !== this.player2 ){
+
+  updateCurrentMovePlayer(player = null) {
+    if (player) {
+      if (player !== this.player1 && player !== this.player2) {
         throw new FatalGameException(`Undefined player (${player})`);
       }
       this.currentMovePlayer = player;
     }
-    else{
+    else {
       this.currentMovePlayer = this.currentMovePlayer === this.player1 ? this.player2 : this.player1;
     }
     Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
@@ -202,14 +208,14 @@ class Game{
 /**
  * Exceptions
  */
-class GameException{
+class GameException {
   constructor(message) {
     this.message = message;
     this.name = "Game Exception";
   }
 }
 
-class FatalGameException extends GameException{
+class FatalGameException extends GameException {
   constructor(message) {
     super(message, "Fatal game Exception");
   }

@@ -1,9 +1,9 @@
-class Logger{
-  // static LOG
-  static serverTime(){
+class Logger {
+  static serverTime() {
     return (new Date).toLocaleTimeString();
   }
-  static log(msg){
+
+  static log(msg) {
     let time = Logger.serverTime();
     console.log(`${time}: ${msg}`);
   }

@@ -1,4 +1,3 @@
-// app.js
 let { GameServer } = require('./classes/GameServer');
 let { Logger } = require('./classes/Logger');
 
@@ -15,43 +14,28 @@ app.get('/', function (req, res, next) {
   res.sendFile(__dirname + '/index.html');
 });
 
-let defaultField = [
-  ['x', 'o', 'x', 'x'],
-  ['x', '-', '-', 'o'],
-  ['x', 'o', 'x', 'x'],
-  ['x', '-', 'o', 'o']
-];
-
-let tmpFlag = true;
-let counter = 0;
-
 let gameServer = new GameServer();
 
 io.on('connection', function (client) {
-  // TODO remove it
-  let marker = tmpFlag ? "x" : "o";
-  let id = (client.id).toString();
-  tmpFlag = !tmpFlag;
-
   gameServer.connectPlayer(client);
 
   client.on('action', (action) => {
-    try{
-      switch (action.type){
-        /* ROOM */
+    try {
+      switch (action.type) {
+          /* ROOM */
         case 'connectToRoom': {
-          const {roomId} = action.data;
+          const { roomId } = action.data;
           gameServer.getRoomById(roomId).connectPlayer(client);
           break;
         }
         case 'doStep': {
-          const {roomId, row, cell} = action.data;
+          const { roomId, row, cell } = action.data;
           let room = gameServer.getRoomById(roomId);
           room.move(row, cell, client);
           break;
         }
         case 'newGame': {
-          const {roomId} = action.data;
+          const { roomId } = action.data;
           gameServer.getRoomById(roomId).newGame(client);
           break;
         }
@@ -59,16 +43,19 @@ io.on('connection', function (client) {
           gameServer.disconnectPlayer(client);
           break;
         }
-        /* CHAT */
+          /* CHAT */
         case 'message': {
-          const {roomId, message, cb = ()=>{}} = action.data;
+          const {
+            roomId, message, cb = () => {
+            }
+          } = action.data;
           gameServer.getRoomById(roomId).say(client, message);
           cb();
           break;
         }
       }
     }
-    catch(e){
+    catch (e) {
       Logger.log(e.message);
       client.emit('gameError', e.message);
     }
