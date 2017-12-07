@@ -22,7 +22,7 @@ class GameOverScreen extends React.Component {
                 <Button
                   fluid primary animated='vertical'
                   onClick={() => {
-                    this.props.onNewGame(this.props.roomId);
+                    this.props.onNewGame();
                   }}>
                   <Button.Content visible>
                     New Game

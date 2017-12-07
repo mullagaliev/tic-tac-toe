@@ -67,10 +67,13 @@ class newApp extends React.Component {
                 <Redirect to="/game"/>);
           }}/>
           <Route path='/game/over' component={() => {
+            if (gameStatus === GAME_STATUSES.STARTED) {
+              return <Redirect to='/game'/>;
+            }
             return (<GameOverScreen
-                roomId={roomInfo ? roomInfo.id : null}
+                roomId={roomId}
                 winnerName={ winnerId }
-                onNewGame={newGame(roomId)}
+                onNewGame={() => this.props.dispatch(newGame(roomId))}
                 isHost={ true }
             />);
           }}/>
