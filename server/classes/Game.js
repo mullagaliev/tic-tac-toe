@@ -189,8 +189,14 @@ class Game{
     }
     Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
 
-    this.player1.socket.emit('switchCurrentPlayer', this.currentMovePlayer.id);
-    this.player2.socket.emit('switchCurrentPlayer', this.currentMovePlayer.id);
+    const action = {
+      type: 'switchCurrentPlayer',
+      data: {
+        currentPlayer: this.currentMovePlayer.id
+      }
+    };
+    this.player1.socket.emit('action', action);
+    this.player2.socket.emit('action', action);
   }
 }
 

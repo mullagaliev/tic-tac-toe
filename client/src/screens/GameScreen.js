@@ -59,6 +59,7 @@ class GameScreen extends React.Component {
   }
 
   render() {
+    const { currentPlayer } = this.props;
     return <Screen
         active={ this.props.active }
         classBgName={'BgImage'}
@@ -72,7 +73,7 @@ class GameScreen extends React.Component {
           <Players
               players={this.props.players}
               currentPlayerId={this.GetCurrentPlayerId()}
-              currentPlayerMove={this.state.currentPlayerMove}
+              currentPlayerMove={currentPlayer}
               isHost={this.iAmHost()}
               scores={this.props.roomInfo ? this.props.roomInfo.scores : {} }
           />
@@ -81,7 +82,7 @@ class GameScreen extends React.Component {
           <div className="b-game-field">
             <GameFieldContainer
                 roomId={this.props.roomId}
-                enable={this.GetCurrentPlayerId() === this.state.currentPlayerMove}
+                enable={this.GetCurrentPlayerId() === currentPlayer}
                 marker={this.GetCurrentMarker()}
             />
           </div>
@@ -92,7 +93,9 @@ class GameScreen extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return state;
+  return {
+    currentPlayer: state.currentPlayer
+  };
 }
 
 export default connect(mapStateToProps)(GameScreen);

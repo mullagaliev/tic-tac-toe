@@ -9,6 +9,7 @@ import Player from './Player';
 class Players extends Component {
   currentPositionLoader() {
     let position = 1;
+    // TODO edit this 
     if ((this.props.isHost && this.props.currentPlayerMove !== this.props.currentPlayerId) ||
         (!this.props.isHost && this.props.currentPlayerMove === this.props.currentPlayerId)) {
       position = 2;
@@ -50,7 +51,7 @@ class Players extends Component {
 Player.propTypes = {
   players: PropTypes.array,
   currentPlayerId: PropTypes.string,
-  currentPlayerMove: PropTypes.bool,
+  currentPlayerMove: PropTypes.string,
   isHost: PropTypes.bool
 };
 Player.defaultProps = {
@@ -62,11 +63,11 @@ Player.defaultProps = {
 
 function mapStateToProps(state) {
   const players = [];
-  if (state.room.client) {
-    players.push(state.room.client);
-  }
   if (state.room.host) {
     players.push(state.room.host);
+  }
+  if (state.room.client) {
+    players.push(state.room.client);
   }
   return {
     players: players

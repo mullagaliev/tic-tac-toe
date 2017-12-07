@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 
 
 const defaultState = {
+  currentPlayer: null,
   room: {
     id: null,
     client: null,
@@ -28,7 +29,10 @@ function reducer(state = defaultState, action) {
       return Object.assign({}, state, { room: action.data });
     case 'roomDestroy':
       return Object.assign({}, state, { room: null });
-      /* CHAT */
+    /* PLAYERS */
+    case 'switchCurrentPlayer':
+      return Object.assign({}, state, { currentPlayer: action.data.currentPlayer });
+    /* CHAT */
     case 'newMessage': {
       const newMessages = Object.assign([], state.messages);
       newMessages.push(action.data);
