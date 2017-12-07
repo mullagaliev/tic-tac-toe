@@ -3,24 +3,12 @@ import Screen from '../layouts/SimpleScreen';
 import Players from '../components/Players/Players';
 import GameFieldContainer from '../containers/Field/FieldContainer';
 import ChatContainer from '../containers/Chat/ChatContainer';
-import { subscribeToUpdatePlayer } from '../services/game/api';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
 import { connect } from 'react-redux';
 import { newGame } from '../actions';
 
 class GameScreen extends React.Component {
-  constructor() {
-    super();
-    this.state = { currentPlayerMove: null };
-    subscribeToUpdatePlayer((err, current) => {
-      console.log(current);
-      if (!err) {
-        this.setState({ currentPlayerMove: current });
-      }
-    });
-  }
-
   GetCurrentMarker() {
     let roomInfo = this.props.roomInfo;
     let marker = '-';

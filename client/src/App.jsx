@@ -5,12 +5,11 @@ import Alerter from './components/Alert/Alert';
 import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
-import {
-  subscribeToGameEnd
-} from './services/game/api';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { newGame, connectToRoom } from './actions';
+import GAME_STATUSES from './constants/gameStatuses';
+
 
 let SCREENS = {
   MENU: { screen: 1 },
@@ -39,13 +38,15 @@ class newApp extends React.Component {
       winnerId: -1,
       isHost: false
     };
-    subscribeToGameEnd((err, winnerId, isHost) => {
-      this.setState({ currentScreen: SCREENS.WINNER, winnerId: winnerId, isHost: isHost });
-    });
   }
 
   render() {
-    const { roomInfo, players } = this.props;
+    const {
+      roomInfo,
+      players,
+      gameStatus,
+      winnerId
+    } = this.props;
     const roomId = roomInfo ? roomInfo.id : null;
     return <Router basename="/">
       <div>
@@ -68,20 +69,25 @@ class newApp extends React.Component {
           <Route path='/game/over' component={() => {
             return (<GameOverScreen
                 roomId={roomInfo ? roomInfo.id : null}
-                winnerName={ this.state.winnerId }
+                winnerName={ winnerId }
                 onNewGame={newGame(roomId)}
-                isHost={ this.state.isHost }
+                isHost={ true }
             />);
           }}/>
           <Route path='/game' component={() => {
-            return (players.length === 2) ?
-                <GameScreen
-                    active={ true }
-                    roomInfo={roomInfo}
-                    roomId={roomId}
-                    players={players}
-                    stop={this.state.stopGame}
-                /> : <Redirect to='/menu'/>;
+            if (gameStatus === GAME_STATUSES.FINISH) {
+              return <Redirect to='/game/over'/>;
+            }
+            if (players.length !== 2) {
+              return <Redirect to='/menu'/>;
+            }
+            return <GameScreen
+                active={ true }
+                roomInfo={roomInfo}
+                roomId={roomId}
+                players={players}
+                stop={this.state.stopGame}
+            />;
           }
           }/>
           <Route path='/connect/:roomId' component={Empty}/>
@@ -106,8 +112,10 @@ function mapStateToProps(state) {
     players.push(state.room.host);
   }
   return {
+    gameStatus: state.gameStatus,
     roomInfo: state.room,
-    players: players
+    players: players,
+    winnerId: state.winnerId
   };
 }
 

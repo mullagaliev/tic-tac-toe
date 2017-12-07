@@ -79,24 +79,20 @@ class GameRoom{
     return this.host && this.client;
   }
   startGame(){
-    this.host.socket.emit('roomReady', this.getInfo(true));
-    this.client.socket.emit('roomReady', this.getInfo(false));
 
     const actionHost = {
-      type: 'roomReady',
+      type: 'gameStart',
       data:  this.getInfo(true)
     };
 
     const actionClient = {
-      type: 'roomReady',
+      type: 'gameStart',
       data:  this.getInfo(false)
     };
 
     this.host.socket.emit('action', actionHost);
     this.client.socket.emit('action', actionClient);
 
-    this.host.socket.emit('gameInfo', `Game started`);
-    this.client.socket.emit('gameInfo', `Game started`);
     Logger.log(`New Game in room ${this.id} started`);
   }
   newGame(client, root = false){

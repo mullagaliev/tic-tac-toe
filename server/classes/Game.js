@@ -159,19 +159,26 @@ class Game{
     Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
 
     if (this.isEnd()) {
-      let winnerId = this.getWinner();
-      this.player1.socket.emit('gameEnd', winnerId, true);
-      this.player2.socket.emit('gameEnd', winnerId, false);
-      // TODO Tmp
-      if(winnerId !== -1) {
-        this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
-        this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
-        this.room ? this.room.upScore(winnerId): '';
-      }
-      else{
-        this.player1.socket.emit('gameSuccess', `tie`);
-        this.player2.socket.emit('gameSuccess', `tie`);
-      }
+      const action = {
+        type: 'gameOver',
+        data: {
+          winnerId: this.getWinner()
+        }
+      };
+      this.player1.socket.emit('action', action);
+      this.player2.socket.emit('action', action);
+      // TODO remove it
+      // this.player1.socket.emit('gameEnd', winnerId, true);
+      // this.player2.socket.emit('gameEnd', winnerId, false);
+      // if(winnerId !== -1) {
+      //   this.player1.socket.emit('gameSuccess', `player ${winnerId} win!`);
+      //   this.player2.socket.emit('gameSuccess', `player ${winnerId} win!`);
+      //   this.room ? this.room.upScore(winnerId): '';
+      // }
+      // else{
+      //   this.player1.socket.emit('gameSuccess', `tie`);
+      //   this.player2.socket.emit('gameSuccess', `tie`);
+      // }
     }
     else{
       this.updateCurrentMovePlayer();

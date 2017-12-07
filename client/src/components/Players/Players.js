@@ -9,7 +9,7 @@ import Player from './Player';
 class Players extends Component {
   currentPositionLoader() {
     let position = 1;
-    // TODO edit this 
+    // TODO edit this
     if ((this.props.isHost && this.props.currentPlayerMove !== this.props.currentPlayerId) ||
         (!this.props.isHost && this.props.currentPlayerMove === this.props.currentPlayerId)) {
       position = 2;

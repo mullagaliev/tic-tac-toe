@@ -2,9 +2,11 @@ import { createStore, applyMiddleware } from 'redux';
 import createSocketIoMiddleware from 'redux-socket.io';
 import io from 'socket.io-client';
 // import rootReducer from '../reducers';
+import GAME_STATUSES from '../constants/gameStatuses';
 
 
 const defaultState = {
+  gameStatus: GAME_STATUSES.NONE,
   currentPlayer: null,
   room: {
     id: null,
@@ -14,7 +16,8 @@ const defaultState = {
     scores: []
   },
   field: [[]],
-  messages: []
+  messages: [],
+  winnerId: null
 };
 
 function reducer(state = defaultState, action) {
@@ -25,14 +28,22 @@ function reducer(state = defaultState, action) {
       return Object.assign({}, state, { field: action.data.field });
       /* ROOM */
     case 'roomInit':
-    case 'roomReady':
-      return Object.assign({}, state, { room: action.data });
+    case 'gameStart':
+      return Object.assign({}, state, {
+        room: action.data,
+        gameStatus: GAME_STATUSES.STARTED
+      });
+    case 'gameOver':
+      return Object.assign({}, state, {
+        winnerId: action.data.winnerId,
+        gameStatus: GAME_STATUSES.FINISH
+      });
     case 'roomDestroy':
       return Object.assign({}, state, { room: null });
-    /* PLAYERS */
+      /* PLAYERS */
     case 'switchCurrentPlayer':
       return Object.assign({}, state, { currentPlayer: action.data.currentPlayer });
-    /* CHAT */
+      /* CHAT */
     case 'newMessage': {
       const newMessages = Object.assign([], state.messages);
       newMessages.push(action.data);

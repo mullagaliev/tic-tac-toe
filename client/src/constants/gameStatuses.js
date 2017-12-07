@@ -1,0 +1,7 @@
+const GAME_STATUSES = {
+  NONE: 'NONE',
+  STARTED: 'STARTED',
+  FINISH: 'FINISH'
+};
+
+export default GAME_STATUSES;
