@@ -1,0 +1,21 @@
+@import "../../style/helpers/all"
+
+.GameMenu
+  position: relative
+  height: 100%
+  +clearfix
+  &Main
+    height: 100%
+    +clearfix
+    button
+      &[disabled] i
+        opacity: 0.3
+      margin-top: 5px
+  &Additional
+    position: absolute
+    left: 0
+    right: 0
+    bottom: -45px
+    height: 40px
+    padding-top: 5px
+

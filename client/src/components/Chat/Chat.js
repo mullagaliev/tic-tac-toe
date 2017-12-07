@@ -1,49 +1,59 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Icon, Input, Button } from 'semantic-ui-react';
-// import _ from 'lodash';
-import { say } from '../../api';
+import logger from '../../helpers/logger';
 import './Chat.sass';
 
-export default class Chat extends React.Component {
-  static defaultProps = {
-    roomId: null
+class Chat extends Component {
+  state = {
+    message: ''
   };
-  constructor() {
-    super();
-    this.state = { message: '' };
-  }
-  onSend() {
-    let val = this.state.message;
-    if (val) {
-      say(this.props.roomId, val, () =>{
-        console.log('message send');
-        this.setState({ message: '' });
-      });
-    }
-  }
-  submit(e) {
+
+  onSend = (e) => {
     e.preventDefault();
-    this.onSend();
-  }
+    const { message } = this.state;
+    const cb = () => {
+      logger('Your message sent successfully');
+      this.setState({ message: '' });
+    };
+    this.props.onSend(message, cb);
+  };
+
+  onChangeMessageText = (e) => {
+    this.setState({ message: e.target.value });
+    this.props.onChangeMessageText();
+  };
+
   render() {
+    const { message } = this.state;
     return (<div className="b-chat">
-      <form onSubmit={ this.submit.bind(this) }>
+      <form onSubmit={this.onSend}>
         <Input
-          fluid
-          action={
-            <Button type="submit" color='blue'>
-              <span><Icon name='send'/>Send </span>
-            </Button>
-          }
-          value={this.state.message}
-          onChange={(event) => {
-            this.setState({ message: event.target.value });
-          }
-          }
-        />
+            fluid
+            action={
+              <Button type="submit" color='blue'>
+                <span>
+                  <Icon name='send'/>
+                  Send
+                </span>
+              </Button>
+            }
+            value={message}
+            onChange={this.onChangeMessageText}/>
       </form>
     </div>);
   }
 }
 
-export { Chat };
+Chat.propTypes = {
+  onSend: PropTypes.func,
+  onChangeMessageText: PropTypes.func
+};
+Chat.defaultProps = {
+  onSend: () => {
+  },
+  onChangeMessageText: () => {
+  }
+};
+
+export default Chat;

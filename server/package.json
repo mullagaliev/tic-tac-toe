@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe-server",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "server for tic-tac-toe",
   "main": "server.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "express": "^4.15.4",
     "lodash": "^4.17.4",
+    "nanoid": "^1.0.1",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

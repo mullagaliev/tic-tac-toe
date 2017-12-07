@@ -1,8 +1,9 @@
-class Marker{
-  constructor(val = 'X'){
+class Marker {
+  constructor(val = 'x') {
     this.val = val;
   }
-  toString(){
+
+  toString() {
     return this.val;
   }
 }
