@@ -10,7 +10,7 @@ class Field extends Component {
   };
   UpdateCell = (x, y) => {
     let { field } = this.state;
-    field[x][y] = this.props.marker;
+    field[x][y] = { val: this.props.marker };
     this.setState({ field });
   };
 
@@ -32,21 +32,23 @@ class Field extends Component {
       return <div className="tr" key={keyRow}>
         { row.map((cell, keyCell) => {
           return (<FieldCell
-            key={keyCell}
-            row={keyRow}
-            cell={keyCell}
-            value={cell.val}
-            onClick={() => {
-              // optimistic ui
-              this.UpdateCell(keyRow, keyCell);
-              this.props.Move(keyRow, keyCell);
-            }
-            }/>);
+              key={keyCell}
+              row={keyRow}
+              cell={keyCell}
+              value={cell.val}
+              onClick={() => {
+                // optimistic ui
+                if (this.props.enable) {
+                  this.UpdateCell(keyRow, keyCell);
+                  this.props.Move(keyRow, keyCell);
+                }
+              }
+              }/>);
         })}
       </div>;
     });
     return <div
-      className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
+        className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
       {fieldCells}
     </div>;
   }
