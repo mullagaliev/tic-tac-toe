@@ -93,11 +93,15 @@ class newApp extends React.Component {
           }/>
           <Route path='/connect/:roomId' component={({ match }) => {
             const roomIdForConnect = match.params.roomId;
-            this.props.dispatch(connectToRoom(roomIdForConnect, ()=>{}));
+            this.props.dispatch(connectToRoom(roomIdForConnect, () => {
+            }));
             return <Redirect to='/game'/>;
           }}/>
           <Route path='/manual' component={Empty}/>
-          <Route path='/' component={Empty}/>
+          <Route path='/' component={() => {
+            return <Redirect to='/menu'/>;
+          }
+          }/>
         </Switch>
       </div>
     </Router>;
