@@ -15,7 +15,7 @@ class Authors extends Component {
               </a>
             </Grid.Column>
             <Grid.Column>
-              <a href="https://github.com/vray1995" target="_blank">
+              <a href="https://github.com/mullagaliev" target="_blank">
                 <div className="b-author__item">
                   <Icon name='github' size='big'/>
                 </div>
