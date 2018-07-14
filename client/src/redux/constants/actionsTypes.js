@@ -14,3 +14,4 @@ export const GAME_OVER = 'gameOver';
 export const ROOM_INIT = 'roomInit';
 export const ROOM_DESTROY = 'roomDestroy';
 export const NEW_MESSAGE = 'newMessage';
+export const SWITCH_CURRENT_PLAYER = 'switchCurrentPlayer';

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Screen from '../../layouts/SimpleScreen';
 import { Button, Icon } from 'semantic-ui-react';
 import Authors from '../../components/static/Authors/Authors';
-import '../MenuScreen/MenuScreen.sass';
+import '../../components/Menu/MenuScreen.sass';
 
 export class GameOverScreen extends React.Component {
   render() {

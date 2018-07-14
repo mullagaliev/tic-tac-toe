@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import 'semantic-ui-css/semantic.min.css';
@@ -15,14 +15,7 @@ import {
 import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
 
-class newApp extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      stopGame: false
-    };
-  }
-
+class App extends Component {
   render() {
     const {
       roomInfo,
@@ -36,28 +29,19 @@ class newApp extends React.Component {
         <AlerterContainer/>
         <Switch>
           <Route path='/menu' component={() => {
-            if (players.length === 2) {
-              return <Redirect to="/game"/>;
-            }
-            return <MenuScreen
-                onConnect={(url) => {
-                  const roomIdForConnect = url.split('/').slice(-1)[0];
-                  const cb = () => {
-                  };
-                  this.props.dispatch(connectToRoom(roomIdForConnect, cb));
-                }}
-                link={roomInfo ? roomInfo.link : null}/>;
+            return gameStatus === GAME_STATUSES.STARTED ?
+                <Redirect to="/game"/>
+                :
+                <MenuScreen/>;
           }}/>
           <Route path='/game/over' component={() => {
-            if (gameStatus === GAME_STATUSES.STARTED) {
-              return <Redirect to='/game'/>;
-            }
-            return (<GameOverScreen
-                roomId={roomId}
-                winnerName={winnerId}
-                onNewGame={() => this.props.dispatch(newGame(roomId))}
-                isHost={true}
-            />);
+            return gameStatus !== GAME_STATUSES.FINISH ?
+                <Redirect to='/game'/> : <GameOverScreen
+                    roomId={roomId}
+                    winnerName={winnerId}
+                    onNewGame={() => this.props.dispatch(newGame(roomId))}
+                    isHost={true}
+                />;
           }}/>
           <Route path='/game' component={() => {
             if (players.length !== 2) {
@@ -71,7 +55,6 @@ class newApp extends React.Component {
                 roomInfo={roomInfo}
                 roomId={roomId}
                 players={players}
-                stop={this.state.stopGame}
             />;
           }
           }/>
@@ -92,26 +75,13 @@ class newApp extends React.Component {
   }
 }
 
-newApp.defaultProps = {
-  roomInfo: null
-};
-
 function mapStateToProps(state) {
-  const players = [];
-  if (state.room) {
-    if (state.room.client) {
-      players.push(state.room.client);
-    }
-    if (state.room.host) {
-      players.push(state.room.host);
-    }
-  }
   return {
     gameStatus: state.gameStatus,
     roomInfo: state.room,
-    players: players,
+    players: state.players.list,
     winnerId: state.players.winnerId
   };
 }
 
-export default connect(mapStateToProps)(newApp);
+export default connect(mapStateToProps)(App);
