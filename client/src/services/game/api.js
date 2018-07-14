@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
-let ip = 'localhost';
-const socket = io('http://' + ip + ':3001');
+import { SERVER_PATH } from '../../constants/config';
+
+const socket = io(SERVER_PATH);
 
 function onError(cb) {
   console.log('subscribe to error init');
