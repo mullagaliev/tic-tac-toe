@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Chat from '../../components/Chat/Chat';
 import { connect } from 'react-redux';
-import { sendMessage } from '../../actions';
+import { sendMessage } from '../../redux/actions';
 
 class ChatContainer extends Component {
   onSend = (message, cb) => {
@@ -13,7 +13,7 @@ class ChatContainer extends Component {
   };
 
   render() {
-    return (<Chat onSend={this.onSend}/>);
+    return <Chat onSend={this.onSend}/>;
   }
 }
 

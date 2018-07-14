@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Field from '../../components/Field/Field';
 import logger from '../../helpers/logger';
-import { doStep } from '../../actions';
+import { doStep } from '../../redux/actions';
 
 class FieldContainer extends Component {
   state = {

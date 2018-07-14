@@ -7,7 +7,7 @@ import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { newGame, connectToRoom } from './actions';
+import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
 
 
@@ -126,7 +126,7 @@ function mapStateToProps(state) {
     gameStatus: state.gameStatus,
     roomInfo: state.room,
     players: players,
-    winnerId: state.winnerId
+    winnerId: state.players.winnerId
   };
 }
 
