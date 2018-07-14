@@ -1,9 +1,9 @@
-let { Logger } = require('./Logger');
-let { MARKERS } = require('./Marker');
+const { Logger } = require('./Logger');
+const { MARKERS } = require('./Marker');
 
 class Player {
   constructor(client, marker = MARKERS.X, isHost = true) {
-    let id = (client.id).toString();
+    const id = (client.id).toString();
     this.id = id;
     this.name = id.toString().substr(0, 6);
     this.current = false;
@@ -29,7 +29,7 @@ class Player {
   }
 
   getInfo(isCurrent) {
-    let info = {
+    return {
       id: this.id,
       name: this.name,
       current: isCurrent,
@@ -37,7 +37,6 @@ class Player {
       room: this.room,
       isHost: this.isHost
     };
-    return info;
   }
 }
 
