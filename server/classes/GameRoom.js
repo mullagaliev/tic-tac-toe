@@ -45,8 +45,13 @@ class GameRoom {
     }
     this.client = clientPLayer;
     client.join(this.id, () => {
+      const message = `Client ${clientPLayer.name} connected`;
+      const action = {
+        type: 'gameInfo',
+        data: message
+      };
       Logger.log(`Client ${clientPLayer.id} connected to room ${this.id}...`);
-      this.host.socket.emit('gameInfo', `Client ${clientPLayer.name} connected`);
+      this.host.socket.emit('action', action);
       if (this.isFull()) {
         Logger.log(`room ${this.id} ready`);
         this.newGame(null, true);

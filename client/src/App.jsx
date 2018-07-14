@@ -1,13 +1,13 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
-import Alerter from './components/Alert/Alert';
+import { AlerterContainer } from './components/Alert/Alert';
 import MenuScreen from './screens/MenuScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { newGame, connectToRoom } from './actions';
+import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
 
 
@@ -49,7 +49,7 @@ class newApp extends React.Component {
     const roomId = roomInfo ? roomInfo.id : null;
     return <Router basename="/">
       <div>
-        <Alerter/>
+        <AlerterContainer/>
         <Switch>
           <Route path='/menu' component={() => {
             if (players.length === 2) {
@@ -70,9 +70,9 @@ class newApp extends React.Component {
             }
             return (<GameOverScreen
                 roomId={roomId}
-                winnerName={ winnerId }
+                winnerName={winnerId}
                 onNewGame={() => this.props.dispatch(newGame(roomId))}
-                isHost={ true }
+                isHost={true}
             />);
           }}/>
           <Route path='/game' component={() => {
@@ -83,7 +83,7 @@ class newApp extends React.Component {
               return <Redirect to='/game/over'/>;
             }
             return <GameScreen
-                active={ true }
+                active={true}
                 roomInfo={roomInfo}
                 roomId={roomId}
                 players={players}
@@ -126,7 +126,7 @@ function mapStateToProps(state) {
     gameStatus: state.gameStatus,
     roomInfo: state.room,
     players: players,
-    winnerId: state.winnerId
+    winnerId: state.players.winnerId
   };
 }
 

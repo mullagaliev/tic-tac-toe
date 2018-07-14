@@ -54,7 +54,11 @@ io.on('connection', function (client) {
     }
     catch (e) {
       Logger.log(e.message);
-      client.emit('gameError', e.message);
+      const action = {
+        type: 'gameError',
+        data: e.message
+      };
+      client.emit('action', action);
     }
   });
 

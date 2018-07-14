@@ -1,10 +1,10 @@
-function currentTime() {
-  return (new Date()).toLocaleTimeString();
-}
+import { currentTime } from './time';
 
-export default function logger(msg) {
+export const logger = function (msg) {
   let time = currentTime();
   if (process.env.NODE_ENV !== 'production') {
     console.log(`${time}: ${msg}`);
   }
-}
+};
+
+export default logger;

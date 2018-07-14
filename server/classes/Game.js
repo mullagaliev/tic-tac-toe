@@ -128,7 +128,6 @@ class Game {
     }
     catch (e) {
       Logger.log(e.message);
-      return true;
     }
   }
 

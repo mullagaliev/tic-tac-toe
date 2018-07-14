@@ -6,7 +6,7 @@ import ChatContainer from '../containers/Chat/ChatContainer';
 import TopGameMenu from '../layouts/headers/TopGameMenu';
 import PLAYERS_ROLES from '../constants/playersRoles';
 import { connect } from 'react-redux';
-import { newGame } from '../actions';
+import { newGame } from '../redux/actions';
 
 class GameScreen extends React.Component {
   GetCurrentMarker() {
@@ -82,7 +82,7 @@ class GameScreen extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    currentPlayer: state.currentPlayer
+    currentPlayer: state.players.currentPlayer
   };
 }
 

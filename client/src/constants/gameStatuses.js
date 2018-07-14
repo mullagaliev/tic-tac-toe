@@ -1,5 +1,6 @@
-const GAME_STATUSES = {
+export const GAME_STATUSES = {
   NONE: 'NONE',
+  INIT: 'INIT',
   STARTED: 'STARTED',
   FINISH: 'FINISH'
 };
