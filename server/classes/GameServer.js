@@ -10,19 +10,7 @@ class GameServer {
     this.players = {};
   }
 
-  // BASE
-  connectPlayer(client) {
-    let id = (client.id).toString();
-    this.players[id] = client;
-    this.onlinePlayers++;
-    Logger.log(`Client Name: ${id}  connected to server...`);
-    Logger.log(`Online players: ${this.onlinePlayers} `);
-
-    let room = new GameRoom(client);
-    this.rooms[room.id] = room;
-  }
-
-  disconnectPlayer(client) {
+  disconnect(client) {
     let roomsIds = _.keys(this.rooms);
     roomsIds.forEach((key) => {
       try {
@@ -34,7 +22,7 @@ class GameServer {
       }
     });
 
-    let id = client.id.toString();
+    const id = client.id;
     this.onlinePlayers--;
     if (this.onlinePlayers < 0) {
       throw new FatalGameServerException(`Server online Players can't be < 0`);
@@ -45,11 +33,42 @@ class GameServer {
 
   // OTHER
   getRoomById(roomId) {
-    let room = this.rooms[roomId];
+    const room = this.rooms[roomId];
     if (!room) {
       throw new GameServerException(`Room ${roomId} not found (room not exists)`);
     }
     return room;
+  }
+
+  connect(playerSocket) {
+    const id = playerSocket.id;
+    this.players[id] = playerSocket;
+    this.onlinePlayers++;
+    Logger.log(`Client Name: ${id}  connected to server...`);
+    Logger.log(`Online players: ${this.onlinePlayers} `);
+
+    const room = new GameRoom(playerSocket);
+    this.rooms[room.id] = room;
+  }
+
+  connectToRoom(roomId, playerSocket) {
+    return this.getRoomById(roomId)
+        .connectPlayer(playerSocket);
+  }
+
+  move(roomId, row, cell, playerSocket) {
+    return this.getRoomById(roomId)
+        .move(row, cell, playerSocket);
+  }
+
+  say(roomId, playerSocket, message) {
+    return this.getRoomById(roomId)
+        .say(playerSocket, message);
+  }
+
+  newGame(roomId, playerSocket) {
+    return this.getRoomById(roomId)
+        .newGame(playerSocket);
   }
 }
 

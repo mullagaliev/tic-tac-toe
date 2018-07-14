@@ -1,23 +1,21 @@
-let { GameServer } = require('./classes/GameServer');
-let { Logger } = require('./classes/Logger');
+const express = require('express');
+const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-let express = require('express');
-let app = express();
-let server = require('http').createServer(app);
-let io = require('socket.io')(server);
-
-
-console.log('server run...');
+const { GameServer } = require('./classes/GameServer');
+const { Logger } = require('./classes/Logger');
 
 app.use(express.static(__dirname + '/bower_components'));
+
 app.get('/', function (req, res, next) {
   res.sendFile(__dirname + '/index.html');
 });
 
-let gameServer = new GameServer();
+const gameServer = new GameServer();
 
 io.on('connection', function (client) {
-  gameServer.connectPlayer(client);
+  gameServer.connect(client);
 
   client.on('action', (action) => {
     try {
@@ -25,22 +23,21 @@ io.on('connection', function (client) {
           /* ROOM */
         case 'connectToRoom': {
           const { roomId } = action.data;
-          gameServer.getRoomById(roomId).connectPlayer(client);
+          gameServer.connectToRoom(roomId, client);
           break;
         }
         case 'doStep': {
           const { roomId, row, cell } = action.data;
-          let room = gameServer.getRoomById(roomId);
-          room.move(row, cell, client);
+          gameServer.move(roomId, row, cell, client);
           break;
         }
         case 'newGame': {
           const { roomId } = action.data;
-          gameServer.getRoomById(roomId).newGame(client);
+          gameServer.newGame(roomId, client);
           break;
         }
         case 'disconnect': {
-          gameServer.disconnectPlayer(client);
+          gameServer.disconnect(client);
           break;
         }
           /* CHAT */
@@ -49,7 +46,7 @@ io.on('connection', function (client) {
             roomId, message, cb = () => {
             }
           } = action.data;
-          gameServer.getRoomById(roomId).say(client, message);
+          gameServer.say(roomId, client, message);
           cb();
           break;
         }
@@ -62,9 +59,10 @@ io.on('connection', function (client) {
   });
 
   client.on('disconnect', () => {
-    gameServer.disconnectPlayer(client);
+    gameServer.disconnect(client);
   });
 });
 
-
 server.listen(3001);
+
+console.log('server run...');

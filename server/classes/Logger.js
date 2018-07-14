@@ -4,7 +4,7 @@ class Logger {
   }
 
   static log(msg) {
-    let time = Logger.serverTime();
+    const time = Logger.serverTime();
     console.log(`${time}: ${msg}`);
   }
 }

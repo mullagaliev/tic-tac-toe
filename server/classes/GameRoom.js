@@ -1,19 +1,25 @@
-let { Logger } = require('./Logger');
-let { Player } = require('./Player');
-let { Game } = require('./Game');
+const { Logger } = require('./Logger');
+const { Player } = require('./Player');
+const { Game } = require('./Game');
 
-let { MARKERS } = require('./Marker');
+const { MARKERS } = require('./Marker');
 
 class GameRoom {
   constructor(host) {
-    let idHost = (host.id).toString();
-    let hostPLayer = new Player(host);
+    const idHost = host.id;
+    const hostPlayer = new Player(host);
     this.id = `room-${idHost}`;
     this.link = 'http://localhost:3000/connect/' + this.id; // TODO so bad
-    this.host = hostPLayer;
+    this.host = hostPlayer;
     this.client = null;
     this.game = null;
     this.scores = {};
+
+    // TODO add members
+    this.players = [];
+    this.players
+        .push(hostPlayer);
+
     host.join(this.id, () => {
       host.emit('roomInit', this.getInfo());
       const action = {
@@ -174,14 +180,13 @@ class GameRoom {
   }
 
   getInfo(isHost = true) {
-    let info = {
+    return {
       id: this.id,
       link: this.link,
       host: this.host ? this.host.getInfo(isHost) : null,
       client: this.client ? this.client.getInfo(!isHost) : null,
       scores: this.scores
     };
-    return info;
   }
 }
 

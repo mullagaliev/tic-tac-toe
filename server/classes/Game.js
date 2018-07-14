@@ -1,5 +1,5 @@
-let { MARKERS } = require('./Marker');
-let { Logger } = require('./Logger');
+const { MARKERS } = require('./Marker');
+const { Logger } = require('./Logger');
 const nanoid = require('nanoid');
 
 class Game {
@@ -27,7 +27,7 @@ class Game {
       return -1;
     }
     function getHorizontalWinnerMarker(field) {
-      let rows = field.filter((row) => {
+      const rows = field.filter((row) => {
         return row[0] === row[1]
             && row[1] === row[2]
             && row[2] === row[3];
@@ -64,9 +64,9 @@ class Game {
       return MARKERS._;
     }
 
-    let horizontalWinnerMarker = getHorizontalWinnerMarker(this.field);
-    let verticalWinnerMarker = getVerticalWinnerMarker(this.field);
-    let diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
+    const horizontalWinnerMarker = getHorizontalWinnerMarker(this.field);
+    const verticalWinnerMarker = getVerticalWinnerMarker(this.field);
+    const diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
 
     let winnerMarker = MARKERS._;
     if (horizontalWinnerMarker !== MARKERS._) {
