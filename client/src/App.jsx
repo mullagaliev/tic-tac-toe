@@ -1,41 +1,25 @@
 import React from 'react';
-import 'semantic-ui-css/semantic.min.css';
-import './App.sass';
-import { AlerterContainer } from './components/Alert/Alert';
-import MenuScreen from './screens/MenuScreen';
-import GameScreen from './screens/GameScreen';
-import GameOverScreen from './screens/GameOverScreen';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import 'semantic-ui-css/semantic.min.css';
+import './App.sass';
+
+import { AlerterContainer } from './components/Alert/Alert';
+import {
+  MenuScreen,
+  GameOverScreen,
+  GameScreenContainer,
+  Error404Screen
+} from './screens';
+
 import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
-
-
-let SCREENS = {
-  MENU: { screen: 1 },
-  SETTINGS: { screen: 2 },
-  GAME: { screen: 3 },
-  WINNER: { screen: 4 }
-};
-
-class Empty extends React.Component {
-  render() {
-    return <div>
-      <p>Hello! i am empty elem</p>
-    </div>;
-  }
-}
 
 class newApp extends React.Component {
   constructor() {
     super();
     this.state = {
-      currentScreen: SCREENS.MENU,
-      roomInfo: null,
-      players: [],
-      stopGame: false,
-      winnerId: -1,
-      isHost: false
+      stopGame: false
     };
   }
 
@@ -82,7 +66,7 @@ class newApp extends React.Component {
             if (gameStatus === GAME_STATUSES.FINISH) {
               return <Redirect to='/game/over'/>;
             }
-            return <GameScreen
+            return <GameScreenContainer
                 active={true}
                 roomInfo={roomInfo}
                 roomId={roomId}
@@ -97,7 +81,7 @@ class newApp extends React.Component {
             }));
             return <Redirect to='/game'/>;
           }}/>
-          <Route path='/manual' component={Empty}/>
+          <Route path='/manual' component={Error404Screen}/>
           <Route path='/' component={() => {
             return <Redirect to='/menu'/>;
           }

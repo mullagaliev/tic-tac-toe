@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Screen from '../layouts/SimpleScreen';
+import Screen from '../../layouts/SimpleScreen';
 import { Button, Icon } from 'semantic-ui-react';
-import Authors from '../components/static/Authors/Authors';
-import './MenuScreen.sass';
+import Authors from '../../components/static/Authors/Authors';
+import '../MenuScreen/MenuScreen.sass';
 
-class GameOverScreen extends React.Component {
+export class GameOverScreen extends React.Component {
   render() {
     return <Screen
       classBgName={'BgImage BgBlur'}
@@ -15,7 +15,7 @@ class GameOverScreen extends React.Component {
             Player {this.props.winnerName} win!
             {}
           </h1>
-          <div className="b-logo"></div>
+          <div className="b-logo"/>
           <div className="b-menu__list">
             <div className="b-menu__item">
               {

@@ -1,14 +1,15 @@
 import React from 'react';
-import Screen from '../layouts/SimpleScreen';
-import Players from '../components/Players/Players';
-import GameFieldContainer from '../containers/Field/FieldContainer';
-import ChatContainer from '../containers/Chat/ChatContainer';
-import TopGameMenu from '../layouts/headers/TopGameMenu';
-import PLAYERS_ROLES from '../constants/playersRoles';
+import Screen from '../../layouts/SimpleScreen';
+import Players from '../../components/Players/Players';
+import GameFieldContainer from '../../containers/Field/FieldContainer';
+import ChatContainer from '../../containers/Chat/ChatContainer';
+import TopGameMenu from '../../layouts/headers/TopGameMenu';
+import PLAYERS_ROLES from '../../constants/playersRoles';
 import { connect } from 'react-redux';
-import { newGame } from '../redux/actions';
+import { newGame } from '../../redux/actions/index';
 
-class GameScreen extends React.Component {
+// TODO переделать весь компонент, убрать connect
+export class GameScreen extends React.Component {
   GetCurrentMarker() {
     let roomInfo = this.props.roomInfo;
     let marker = '-';
@@ -86,4 +87,5 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(GameScreen);
+export const GameScreenContainer = connect(mapStateToProps)(GameScreen);
+export default GameScreen;

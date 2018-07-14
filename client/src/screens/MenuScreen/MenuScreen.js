@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Screen from '../layouts/SimpleScreen';
+import Screen from '../../layouts/SimpleScreen';
 import { Input, Button, Divider, Icon } from 'semantic-ui-react';
-import CopyButton from '../components/common/buttons/CopyButton/CopyButton';
-import Authors from '../components/static/Authors/Authors';
+import CopyButton from '../../components/common/buttons/CopyButton/CopyButton';
+import Authors from '../../components/static/Authors/Authors';
 import './MenuScreen.sass';
 
-class MenuScreen extends React.Component {
+export class MenuScreen extends React.Component {
   state = {
     connectString: '',
     copied: false
