@@ -21,7 +21,6 @@ class Chat extends Component {
 
   onChangeMessageText = (e) => {
     this.setState({ message: e.target.value });
-    this.props.onChangeMessageText();
   };
 
   render() {
@@ -46,13 +45,10 @@ class Chat extends Component {
 }
 
 Chat.propTypes = {
-  onSend: PropTypes.func,
-  onChangeMessageText: PropTypes.func
+  onSend: PropTypes.func
 };
 Chat.defaultProps = {
   onSend: () => {
-  },
-  onChangeMessageText: () => {
   }
 };
 

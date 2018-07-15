@@ -2,7 +2,7 @@ import React from 'react';
 import Screen from '../../layouts/SimpleScreen';
 import { PlayersContainer } from '../../containers/Players';
 import GameFieldContainer from '../../containers/Field/FieldContainer';
-import ChatContainer from '../../containers/Chat/ChatContainer';
+import { ChatContainer } from '../../containers/Chat';
 import { TopMenuContainer } from '../../containers/TopMenu';
 
 
@@ -11,7 +11,7 @@ export class GameScreen extends React.Component {
     return <Screen
         classBgName={'BgImage'}
         header={<TopMenuContainer/>}
-        footer={<ChatContainer roomId={this.props.roomId}/>}>
+        footer={<ChatContainer/>}>
       <div className="b-game">
         <div className="b-game-interface__info">
           <PlayersContainer/>
