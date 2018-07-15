@@ -4,7 +4,7 @@ import { Icon, Input, Button } from 'semantic-ui-react';
 import logger from '../../helpers/logger';
 import './Chat.sass';
 
-class Chat extends Component {
+export class Chat extends Component {
   state = {
     message: ''
   };

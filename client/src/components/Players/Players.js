@@ -1,63 +1,61 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Popup } from 'semantic-ui-react';
-import './Players.sass';
+import styled from 'styled-components';
 import Player from './Player';
+import Spinner from './Spinner';
 
+const PlayersContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 240px;
+`;
 
-class Players extends Component {
-  currentPositionLoader() {
-    let position = 1;
-    // TODO edit this
-    if ((this.props.isHost && this.props.currentPlayerMove !== this.props.currentPlayerId) ||
-        (!this.props.isHost && this.props.currentPlayerMove === this.props.currentPlayerId)) {
-      position = 2;
-    }
-    return position;
-  }
+const PlayersList = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+`;
 
+export class Players extends Component {
   render() {
-    const { players, scores } = this.props;
-    let playersList = players.map((player) => {
-      return <Player
-          key={ player.id }
-          id={ player.id }
-          name={ player.name }
-          active={ player.id === this.props.currentPlayerMove }
-          current={ player.current }
-          marker={ player.marker }
-          position={ player.isHost ? 'host' : 'client' }
-          score={ scores[player.id] ? scores[player.id] : 0}
-      />;
-    });
-    return (<div className="b-players">
-      <div className="b-players__list">
+    const { players, scores, isYour, currentPlayer, currentPlayerId, myMarker } = this.props;
+    let playersList = players.map(player =>
+        <Player
+            key={player.id}
+            player={player}
+            marker={player.marker}
+            name={player.name}
+            active={player.id === currentPlayer}
+            isYou={player.id === currentPlayerId}
+            score={scores[player.id] ? scores[player.id] : 0}
+        />);
+    return (<PlayersContainer>
+      <PlayersList>
         {playersList}
-      </div>
-      <div className="b-players__current" value={ this.currentPositionLoader() }>
-        <Popup
-            trigger={<div className="c-current">
-              <Icon loading name='spinner' size="big" color="white"/>
-            </div>}
-            content={ this.props.currentPlayerMove === this.props.currentPlayerId ? 'Ваш ход' : 'Игрок думает' }
-            position='top center'
-        />
-      </div>
-    </div>);
+      </PlayersList>
+      <Spinner isYour={isYour}
+               myMarker={myMarker}/>
+    </PlayersContainer>);
   }
 }
 
 Player.propTypes = {
   players: PropTypes.array,
   currentPlayerId: PropTypes.string,
-  currentPlayerMove: PropTypes.string,
-  isHost: PropTypes.bool
+  currentPlayer: PropTypes.string,
+  isCurrent: PropTypes.bool,
+  myMarker: PropTypes.string
 };
+
 Player.defaultProps = {
   players: [],
   currentPlayerId: null,
-  currentPlayerMove: null,
-  isHost: null
+  currentPlayer: null,
+  isCurrent: false,
+  myMarker: '_'
 };
 
 export default Players;

@@ -1,54 +1,8 @@
-@import "../../style/helpers/all"
-
-.b-players
-  position: absolute
-  bottom: 0
-  margin-bottom: 40px
-  left: 50%
-  transform: translateX(-50%)
-  width: 240px
-  &__list
-    +clearfix
-  &__current
-    position: absolute
-    bottom: -35px
-    left: 0
-    right: 0
-    margin: 0 30px
-    height: 30px
-    text-align: left
-    .c-current
-      border-radius: 100%
-      width: 30px
-      height: 30px
-      transition: all 1s cubic-bezier(.62,0,.33,1)
-      position: absolute
-      left: 75px
-      .icon
-        color: black !important
-      background-color: white
-      box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
-    &[value="1"]
-      .c-current
-        left: 0
-        .icon
-          color: $color-player1 !important
-    &[value="2"]
-      .c-current
-        left: 150px
-        .icon
-          color: $color-player2 !important
-
-
 .b-player
   $parent: &
   position: relative
   border-radius: 100%
   width: 90px
-  float: left
-  margin-right: 60px
-  &:last-child
-    margin-right: 0
   &.current
     #{$parent}__avatar
       animation: pulse 2s infinite
@@ -62,20 +16,6 @@
     color: white
     font-size: 14px
     text-shadow: 2px 2px rgba(255, 0, 0, 0.5)
-  &__avatar
-    position: relative
-    border-radius: 100%
-    width: 90px
-    height: 90px
-    background-color: white
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
-    &-image
-      position: absolute
-      top: 10px
-      left: 10px
-      width: 70px
-      height: 70px
-      border-radius: 100%
   &__score
     position: absolute
     bottom: 0
@@ -96,17 +36,13 @@
     .icon
       margin-top: 1px
       margin-left: -1px
-  @at-root &--host
-    #{$parent}__avatar
-      background-color: $color-player1
+  @at-root &--first
     #{$parent}__score
       right: -20px
     #{$parent}__marker
       left: 0
       right: initial
-  @at-root &--client
-    #{$parent}__avatar
-      background-color: $color-player2
+  @at-root &--second
     #{$parent}__score
       left: -20px
     #{$parent}__marker

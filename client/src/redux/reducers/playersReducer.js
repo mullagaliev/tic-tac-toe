@@ -22,6 +22,7 @@ export const playersReducer = function (state = defaultState, { type, data }) {
           let list = [];
           list.push(data.host);
           list.push(data.client);
+          list = list.sort((a, b) => a.current < b.current);
           return { ...state, list };
         }
         default:

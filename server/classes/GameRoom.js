@@ -150,33 +150,41 @@ class GameRoom {
   }
 
   say(client, message) {
-    let idClient = (client.id).toString();
-    let name = idClient.substr(0, 5);
+    let playerId = (client.id).toString();
+    let name = playerId.substr(0, 5);
 
-    const serverTime = (new Date).toLocaleTimeString();
+    const date = (new Date);
 
-    if ((this.host && this.host.id === idClient) || (this.client && this.client.id === idClient)) {
-      if (this.client) {
-        const action = {
-          type: 'newMessage',
-          data: {
-            date: serverTime,
-            name: name,
-            message: message
-          }
-        };
-        this.client.socket.emit('action', action);
+    if ((this.host && client === this.host.socket) ||
+        (this.client && client === this.client.socket)) {
+
+      const yourMessageAction = {
+        type: 'newMessage',
+        data: {
+          isYour: true,
+          date,
+          name,
+          playerId,
+          message
+        }
+      };
+      const messageAction = {
+        type: 'newMessage',
+        data: {
+          isYour: false,
+          date,
+          name,
+          playerId,
+          message
+        }
+      };
+      if(client === this.client.socket){
+        this.client.socket.emit('action', yourMessageAction);
+        this.host.socket.emit('action', messageAction);
       }
-      if (this.host) {
-        const action = {
-          type: 'newMessage',
-          data: {
-            date: serverTime,
-            name: name,
-            message: message
-          }
-        };
-        this.host.socket.emit('action', action);
+      else{
+        this.client.socket.emit('action', messageAction);
+        this.host.socket.emit('action', yourMessageAction);
       }
     }
     else {

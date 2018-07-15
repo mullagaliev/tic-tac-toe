@@ -1,10 +1,10 @@
-import Chat from '../../components/Chat/Chat';
+import { Chat } from '../../components/Chat';
 import { connect } from 'react-redux';
 import { sendMessage } from '../../redux/actions';
 
 function mapStateToProps(state, ownProps) {
   return {
-      ...ownProps,
+    ...ownProps,
     roomId: state.room.id,
     messages: state.messages
   };
