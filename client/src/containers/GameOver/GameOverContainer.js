@@ -6,8 +6,9 @@ function mapStateToProps(state, ownProps) {
   return {
     ...ownProps,
     roomId: state.room.id,
-    winnerName: state.players.winnerId,
-    isHost: state.player.isHost
+    winnerId: state.players.winnerId,
+    isHost: state.player.isHost,
+    youWin: state.players.winnerId === state.player.id
   };
 }
 
