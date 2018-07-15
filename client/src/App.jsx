@@ -14,6 +14,7 @@ import {
 
 import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
+import Background from './components/ui/Background';
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
     const roomId = roomInfo ? roomInfo.id : null;
     return <Router basename="/">
       <div>
+        <Background/>
         <AlerterContainer/>
         <Switch>
           <Route path='/menu' component={() => {
