@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => {
     ...ownProps,
     roomId: state.room.id,
     role: state.player.isHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT,
-    level: 1,
+    level: state.room.level,
     isHost: state.player.isHost
   };
 };

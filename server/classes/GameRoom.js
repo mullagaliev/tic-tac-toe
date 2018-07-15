@@ -14,7 +14,7 @@ class GameRoom {
     this.client = null;
     this.game = null;
     this.scores = {};
-
+    this.level = 1;
     // TODO add members
     this.players = [];
     this.players
@@ -146,6 +146,7 @@ class GameRoom {
   }
 
   upScore(playerId) {
+    this.level++;
     this.scores[playerId] = this.scores[playerId] ? this.scores[playerId] + 1 : 1;
   }
 
@@ -198,7 +199,8 @@ class GameRoom {
       link: this.link,
       host: this.host ? this.host.getInfo(isHost) : null,
       client: this.client ? this.client.getInfo(!isHost) : null,
-      scores: this.scores
+      scores: this.scores,
+      level: this.level
     };
   }
 }
