@@ -9,7 +9,20 @@ export default function action(type, data = {}) {
   return { type, data };
 }
 
-export const connectToRoom = (roomId, cb) => action(CONNECT_TO_ROOM, { roomId, cb });
+const defaultCb = function () {
+
+};
+
+export const connectToRoom = (roomId, cb = defaultCb) => action(CONNECT_TO_ROOM, { roomId, cb });
 export const newGame = (roomId) => action(NEW_GAME, { roomId });
-export const doStep = (roomId, row, cell, cb) => action(DO_STEP, { roomId, row, cell, cb });
-export const sendMessage = (roomId, message, cb) => action(SEND_MESSAGE, { roomId, message, cb });
+export const doStep = (roomId, row, cell, cb = defaultCb) => action(DO_STEP, {
+  roomId,
+  row,
+  cell,
+  cb
+});
+export const sendMessage = (roomId, message, cb = defaultCb) => action(SEND_MESSAGE, {
+  roomId,
+  message,
+  cb
+});

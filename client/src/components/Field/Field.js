@@ -4,13 +4,18 @@ import './Field.sass';
 import FieldCell from './FieldCell';
 
 
-class Field extends Component {
-  state = {
-    field: [[]]
-  };
+export class Field extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      field: props.field ? props.field : [[]]
+    };
+  }
+
   UpdateCell = (x, y) => {
-    let { field } = this.state;
-    field[x][y] = { val: this.props.marker };
+    const { marker } = this.props;
+    let field = this.state.field.slice();
+    field[x][y] = { val: marker };
     this.setState({ field });
   };
 
@@ -20,27 +25,22 @@ class Field extends Component {
     });
   }
 
-  componentDidMount() {
-    this.setState({
-      field: this.props.field
-    });
-  }
-
   render() {
     const { field } = this.state;
+    const { enable, Move } = this.props;
     const fieldCells = field.map((row, keyRow) => {
       return <div className="tr" key={keyRow}>
-        { row.map((cell, keyCell) => {
+        {row.map((cell, keyCell) => {
           return (<FieldCell
-              key={keyCell}
+              key={(4 * keyRow) + keyCell}
               row={keyRow}
               cell={keyCell}
               value={cell.val}
               onClick={() => {
-                // optimistic ui
-                if (this.props.enable) {
+                if (enable) {
+                  // optimistic ui
                   this.UpdateCell(keyRow, keyCell);
-                  this.props.Move(keyRow, keyCell);
+                  Move(keyRow, keyCell);
                 }
               }
               }/>);
@@ -48,7 +48,7 @@ class Field extends Component {
       </div>;
     });
     return <div
-        className={'table b-game-field__table b-game-field__inside' + (this.props.enable ? '' : ' disabled') }>
+        className={'table b-game-field__table b-game-field__inside' + (enable ? '' : ' disabled')}>
       {fieldCells}
     </div>;
   }
@@ -60,12 +60,11 @@ Field.propTypes = {
   marker: PropTypes.string,
   enable: PropTypes.bool
 };
+
 Field.defaultProps = {
   Move: () => {
-
   },
   field: [[]],
-  roomInfo: null,
   marker: '_',
   enable: false
 };

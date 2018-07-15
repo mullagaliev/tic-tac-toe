@@ -10,15 +10,6 @@ import { newGame } from '../../redux/actions/index';
 
 // TODO переделать весь компонент, убрать connect
 export class GameScreen extends React.Component {
-  GetCurrentMarker() {
-    let roomInfo = this.props.roomInfo;
-    let marker = '-';
-    if (roomInfo && roomInfo.host && roomInfo.client) {
-      marker = roomInfo.host.current ? roomInfo.host.marker : roomInfo.client.marker;
-    }
-    return marker;
-  }
-
   GetCurrentPlayerId() {
     let roomInfo = this.props.roomInfo;
     let playerId = null;
@@ -43,20 +34,15 @@ export class GameScreen extends React.Component {
     return level;
   }
 
-  componentWillUnmount() {
-    // this.props.dispatch({ type: 'disconnect', date: {} });
-  }
-
   render() {
     const { currentPlayer } = this.props;
     return <Screen
-        active={ this.props.active }
         classBgName={'BgImage'}
-        header={ <TopGameMenu
-            role={ this.iAmHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT }
-            level={ this.getLevel() }
+        header={<TopGameMenu
+            role={this.iAmHost ? PLAYERS_ROLES.HOST : PLAYERS_ROLES.CLIENT}
+            level={this.getLevel()}
             onNewGame={() => this.props.dispatch(newGame(this.props.roomId))}/>}
-        footer={ <ChatContainer roomId={this.props.roomId}/> }>
+        footer={<ChatContainer roomId={this.props.roomId}/>}>
       <div className="b-game">
         <div className="b-game-interface__info">
           <Players
@@ -64,16 +50,12 @@ export class GameScreen extends React.Component {
               currentPlayerId={this.GetCurrentPlayerId()}
               currentPlayerMove={currentPlayer}
               isHost={this.iAmHost()}
-              scores={this.props.roomInfo ? this.props.roomInfo.scores : {} }
+              scores={this.props.roomInfo ? this.props.roomInfo.scores : {}}
           />
         </div>
         <div className="b-game-interface__field">
           <div className="b-game-field">
-            <GameFieldContainer
-                roomId={this.props.roomId}
-                enable={this.GetCurrentPlayerId() === currentPlayer}
-                marker={this.GetCurrentMarker()}
-            />
+            <GameFieldContainer/>
           </div>
         </div>
       </div>

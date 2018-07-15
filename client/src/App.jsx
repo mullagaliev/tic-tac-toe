@@ -50,12 +50,7 @@ class App extends Component {
             if (gameStatus === GAME_STATUSES.FINISH) {
               return <Redirect to='/game/over'/>;
             }
-            return <GameScreenContainer
-                active={true}
-                roomInfo={roomInfo}
-                roomId={roomId}
-                players={players}
-            />;
+            return <GameScreenContainer roomId={roomId}/>;
           }
           }/>
           <Route path='/connect/:roomId' component={({ match }) => {
