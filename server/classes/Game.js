@@ -3,22 +3,33 @@ const { Logger } = require('./Logger');
 const nanoid = require('nanoid');
 
 class Game {
-  constructor(player1, player2, room = null) {
+  constructor(player1, player2, room = null, swapSides = true) {
+    this.id = nanoid();
     let defaultField = [
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
       [MARKERS._, MARKERS._, MARKERS._, MARKERS._]
     ];
-    this.id = nanoid();
-    this.currentMovePlayer = null;
-    this.player1 = player1;
-    this.player2 = player2;
     this.field = defaultField;
     this.room = room;
 
+    this.currentMovePlayer = null;
+    this.player1 = player1;
+    this.player2 = player2;
+    // Смена сторон
+    if (swapSides) {
+      this.player1.swapMarkers(this.player2);
+    }
+
     this.updateField();
-    this.updateCurrentMovePlayer(player1);
+
+    // игрок с маркером Х ходит первым
+    if (this.player1.marker === MARKERS.X) {
+      this.updateCurrentMovePlayer(player1);
+    } else {
+      this.updateCurrentMovePlayer(player2);
+    }
     Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
   }
 
@@ -26,6 +37,7 @@ class Game {
     if (!this.field) {
       return -1;
     }
+
     function getHorizontalWinnerMarker(field) {
       const rows = field.filter((row) => {
         return row[0] === row[1]
@@ -109,8 +121,8 @@ class Game {
   moves() {
     return this.field.reduce((prev, row) => {
       return prev || row.reduce((prevCell, cell) => {
-            return prevCell || (cell === MARKERS._);
-          }, false);
+        return prevCell || (cell === MARKERS._);
+      }, false);
     }, false);
   }
 
