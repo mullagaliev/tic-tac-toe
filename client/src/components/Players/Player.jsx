@@ -6,25 +6,25 @@ import './Players.sass';
 
 class Player extends Component {
   render() {
+    const { id, position, active, current, name, score, marker } = this.props;
     return (<div
-      className={'b-player b-player--' + this.props.position + (this.props.active ? ' current' : '') }
-      key={this.props.id}>
+        className={'b-player b-player--' + position + (active ? ' current' : '')}
+        key={id}>
       <div className="b-player__name">
         <span>
-          { this.props.current ? 'You (' + this.props.name + ')' : this.props.name }
+          {current ? `You (${name})` : name}
           <br/>
         </span>
       </div>
       {/* TODO create score component */}
       <div className="b-player__score">
-        {this.props.score}
+        {score}
       </div>
       <div className="b-player__avatar">
         <img
-          // TODO move to static folder
-          src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/720/ninja-background-128.png"
-          className="b-player__avatar-image"/>
-        <div className="b-player__marker c-mark" value={ this.props.marker }>
+            src="/static/img/default_avatar.png"
+            className="b-player__avatar-image"/>
+        <div className="b-player__marker c-mark" value={marker}>
           <Icon className="c-mark__x" name='remove' size="big" color="pink"/>
           <Icon className="c-mark__o" name='circle thin' size="big" color="blue"/>
         </div>

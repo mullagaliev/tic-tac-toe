@@ -1,7 +1,12 @@
 import React from 'react';
 import Screen from '../../layouts/SimpleScreen';
-import { PlayersContainer, ChatContainer, TopMenuContainer, GameFieldContainer } from '../../containers';
-
+import {
+  PlayersContainer,
+  ChatContainer,
+  TopMenuContainer,
+  GameFieldContainer,
+  MessageListContainer
+} from '../../containers';
 
 export class GameScreen extends React.Component {
   render() {
@@ -11,6 +16,7 @@ export class GameScreen extends React.Component {
         footer={<ChatContainer/>}>
       <div className="b-game">
         <div className="b-game-interface__info">
+          <MessageListContainer/>
           <PlayersContainer/>
         </div>
         <div className="b-game-interface__field">

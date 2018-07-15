@@ -9,8 +9,10 @@ class Players extends Component {
   currentPositionLoader() {
     let position = 1;
     // TODO edit this
-    if ((this.props.isHost && this.props.currentPlayerMove !== this.props.currentPlayerId) ||
-        (!this.props.isHost && this.props.currentPlayerMove === this.props.currentPlayerId)) {
+    if ((this.props.isHost &&
+            this.props.currentPlayerMove !== this.props.currentPlayerId) ||
+        (!this.props.isHost &&
+            this.props.currentPlayerMove === this.props.currentPlayerId)) {
       position = 2;
     }
     return position;
@@ -20,26 +22,27 @@ class Players extends Component {
     const { players, scores } = this.props;
     let playersList = players.map((player) => {
       return <Player
-          key={ player.id }
-          id={ player.id }
-          name={ player.name }
-          active={ player.id === this.props.currentPlayerMove }
-          current={ player.current }
-          marker={ player.marker }
-          position={ player.isHost ? 'host' : 'client' }
-          score={ scores[player.id] ? scores[player.id] : 0}
+          key={player.id}
+          player={player}
+          id={player.id}
+          name={player.name}
+          active={player.id === this.props.currentPlayerMove}
+          current={player.current}
+          marker={player.marker}
+          position={player.isHost ? 'host' : 'client'}
+          score={scores[player.id] ? scores[player.id] : 0}
       />;
     });
     return (<div className="b-players">
       <div className="b-players__list">
         {playersList}
       </div>
-      <div className="b-players__current" value={ this.currentPositionLoader() }>
+      <div className="b-players__current" data-value={this.currentPositionLoader()}>
         <Popup
             trigger={<div className="c-current">
               <Icon loading name='spinner' size="big" color="white"/>
             </div>}
-            content={ this.props.currentPlayerMove === this.props.currentPlayerId ? 'Ваш ход' : 'Игрок думает' }
+            content={this.props.currentPlayerMove === this.props.currentPlayerId ? 'Ваш ход' : 'Игрок думает'}
             position='top center'
         />
       </div>
