@@ -8,7 +8,7 @@ import { AlerterContainer } from './components/Alert/Alert';
 import {
   MenuScreen,
   GameOverScreen,
-  GameScreenContainer,
+  GameScreen,
   Error404Screen
 } from './screens';
 
@@ -50,7 +50,7 @@ class App extends Component {
             if (gameStatus === GAME_STATUSES.FINISH) {
               return <Redirect to='/game/over'/>;
             }
-            return <GameScreenContainer roomId={roomId}/>;
+            return <GameScreen roomId={roomId}/>;
           }
           }/>
           <Route path='/connect/:roomId' component={({ match }) => {
