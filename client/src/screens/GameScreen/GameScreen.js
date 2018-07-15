@@ -1,9 +1,6 @@
 import React from 'react';
 import Screen from '../../layouts/SimpleScreen';
-import { PlayersContainer } from '../../containers/Players';
-import GameFieldContainer from '../../containers/Field/FieldContainer';
-import { ChatContainer } from '../../containers/Chat';
-import { TopMenuContainer } from '../../containers/TopMenu';
+import { PlayersContainer, ChatContainer, TopMenuContainer, GameFieldContainer } from '../../containers';
 
 
 export class GameScreen extends React.Component {

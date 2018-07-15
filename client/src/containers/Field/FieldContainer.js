@@ -24,4 +24,4 @@ function mergeProps(stateProps, dispatchProps) {
   };
 }
 
-export default connect(mapStateToProps, null, mergeProps)(Field);
+export const GameFieldContainer = connect(mapStateToProps, null, mergeProps)(Field);

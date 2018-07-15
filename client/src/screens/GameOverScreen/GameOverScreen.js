@@ -13,7 +13,6 @@ export class GameOverScreen extends React.Component {
         <div className="b-menu">
           <h1 className="welcome">
             Player {this.props.winnerName} win!
-            {}
           </h1>
           <div className="b-logo"/>
           <div className="b-menu__list">
@@ -45,6 +44,7 @@ GameOverScreen.propTypes = {
   onNewGame: PropTypes.func,
   onExit: PropTypes.func
 };
+
 GameOverScreen.defaultProps = {
   winnerName: '',
   onNewGame: () => {
