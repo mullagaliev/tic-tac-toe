@@ -1,34 +1,27 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Chat from '../../components/Chat/Chat';
 import { connect } from 'react-redux';
 import { sendMessage } from '../../redux/actions';
 
-class ChatContainer extends Component {
-  onSend = (message, cb) => {
-    const { roomId } = this.props;
-    if (message) {
-      this.props.dispatch(sendMessage(roomId, message, cb));
-    }
-  };
-
-  render() {
-    return <Chat onSend={this.onSend}/>;
-  }
-}
-
-
-ChatContainer.propTypes = {
-  roomId: PropTypes.string
-};
-ChatContainer.defaultProps = {
-  roomId: null
-};
-
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
+      ...ownProps,
+    roomId: state.room.id,
     messages: state.messages
   };
 }
 
-export default connect(mapStateToProps)(ChatContainer);
+function mergeProps(stateProps, dispatchProps) {
+  const { roomId } = stateProps;
+  const { dispatch } = dispatchProps;
+
+  return {
+    ...stateProps,
+    onSend: (message, cb) => {
+      if (message) {
+        dispatch(sendMessage(roomId, message, cb));
+      }
+    }
+  };
+}
+
+export const ChatContainer = connect(mapStateToProps, null, mergeProps)(Chat);

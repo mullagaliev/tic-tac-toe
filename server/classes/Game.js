@@ -193,14 +193,31 @@ class Game {
     }
     Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
 
+    const actionCurrent = {
+      type: 'switchCurrentPlayer',
+      data: {
+        currentPlayer: this.currentMovePlayer.id,
+        isCurrent: true
+      }
+    };
+
     const action = {
       type: 'switchCurrentPlayer',
       data: {
-        currentPlayer: this.currentMovePlayer.id
+        currentPlayer: this.currentMovePlayer.id,
+        isCurrent: false
       }
     };
-    this.player1.socket.emit('action', action);
-    this.player2.socket.emit('action', action);
+
+    if (this.currentMovePlayer === this.player1) {
+      this.player1.socket.emit('action', actionCurrent);
+      this.player2.socket.emit('action', action);
+    }
+    else {
+      this.player1.socket.emit('action', action);
+      this.player2.socket.emit('action', actionCurrent);
+    }
+
   }
 }
 

@@ -1,29 +1,24 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Screen from '../layouts/SimpleScreen';
 import { Button, Icon } from 'semantic-ui-react';
-import Authors from '../components/static/Authors/Authors';
-import './MenuScreen.sass';
+import Authors from '../../components/static/Authors/Authors';
+// import '../../components/Menu/MenuScreen.sass';
 
-class GameOverScreen extends React.Component {
+export class GameOverMenu extends Component {
   render() {
-    return <Screen
-      classBgName={'BgImage BgBlur'}
-      children={
+    const { winnerName, onNewGame } = this.props;
+    return (
         <div className="b-menu">
           <h1 className="welcome">
-            Player {this.props.winnerName} win!
-            {}
+            Player {winnerName} win!
           </h1>
-          <div className="b-logo"></div>
+          <div className="b-logo"/>
           <div className="b-menu__list">
             <div className="b-menu__item">
               {
                 <Button
-                  fluid primary animated='vertical'
-                  onClick={() => {
-                    this.props.onNewGame();
-                  }}>
+                    fluid primary animated='vertical'
+                    onClick={onNewGame}>
                   <Button.Content visible>
                     New Game
                   </Button.Content>
@@ -35,17 +30,18 @@ class GameOverScreen extends React.Component {
             </div>
           </div>
           <Authors/>
-        </div>}
-    />;
+        </div>
+    );
   }
 }
 
-GameOverScreen.propTypes = {
+GameOverMenu.propTypes = {
   winnerName: PropTypes.string,
   onNewGame: PropTypes.func,
   onExit: PropTypes.func
 };
-GameOverScreen.defaultProps = {
+
+GameOverMenu.defaultProps = {
   winnerName: '',
   onNewGame: () => {
   },
@@ -53,5 +49,4 @@ GameOverScreen.defaultProps = {
   }
 };
 
-export default GameOverScreen;
-
+export default GameOverMenu;

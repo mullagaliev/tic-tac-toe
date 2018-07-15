@@ -7,7 +7,6 @@ class SimpleScreen extends Component {
   render() {
     const { header, children, footer } = this.props;
     return <div className={classnames('App')}>
-      <div className={classnames('Bg', this.props.classBgName)}/>
       {header ? (<div className="b-top-nav">
         { header }
       </div>) : null }
@@ -24,14 +23,12 @@ class SimpleScreen extends Component {
 SimpleScreen.propTypes = {
   nav: PropTypes.node,
   content: PropTypes.node,
-  footer: PropTypes.node,
-  classBgName: PropTypes.string
+  footer: PropTypes.node
 };
 SimpleScreen.defaultProps = {
   nav: null,
   content: null,
-  footer: null,
-  classBgName: ''
+  footer: null
 };
 
 export default SimpleScreen;
