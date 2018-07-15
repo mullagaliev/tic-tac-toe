@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import { connect } from 'react-redux';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
-
 import { AlerterContainer } from './components/Alert/Alert';
 import {
   MenuScreen,
@@ -12,19 +11,16 @@ import {
   Error404Screen
 } from './screens';
 
-import { newGame, connectToRoom } from './redux/actions';
 import GAME_STATUSES from './constants/gameStatuses';
 import Background from './components/ui/Background';
+import { connectToRoom } from './redux/actions';
 
 class App extends Component {
   render() {
     const {
-      roomInfo,
       players,
-      gameStatus,
-      winnerId
+      gameStatus
     } = this.props;
-    const roomId = roomInfo ? roomInfo.id : null;
     return <Router basename="/">
       <div>
         <Background/>
@@ -38,12 +34,7 @@ class App extends Component {
           }}/>
           <Route path='/game/over' component={() => {
             return gameStatus !== GAME_STATUSES.FINISH ?
-                <Redirect to='/game'/> : <GameOverScreen
-                    roomId={roomId}
-                    winnerName={winnerId}
-                    onNewGame={() => this.props.dispatch(newGame(roomId))}
-                    isHost={true}
-                />;
+                <Redirect to='/game'/> : <GameOverScreen/>;
           }}/>
           <Route path='/game' component={() => {
             if (players.length !== 2) {
@@ -57,8 +48,8 @@ class App extends Component {
           }/>
           <Route path='/connect/:roomId' component={({ match }) => {
             const roomIdForConnect = match.params.roomId;
-            this.props.dispatch(connectToRoom(roomIdForConnect, () => {
-            }));
+            this.props.connectToRoom(roomIdForConnect, () => {
+            });
             return <Redirect to='/game'/>;
           }}/>
           <Route path='/manual' component={Error404Screen}/>
@@ -75,10 +66,8 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     gameStatus: state.gameStatus,
-    roomInfo: state.room,
-    players: state.players.list,
-    winnerId: state.players.winnerId
+    players: state.players.list
   };
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, { connectToRoom })(App);
