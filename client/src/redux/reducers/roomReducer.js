@@ -9,7 +9,8 @@ const defaultState = {
   client: null,
   host: null,
   link: '',
-  scores: []
+  scores: [],
+  level: 1
 };
 
 export const roomReducer = function (state = defaultState, { type, data }) {
