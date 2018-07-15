@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Popup } from 'semantic-ui-react';
-import { connect } from 'react-redux';
 import './Players.sass';
 import Player from './Player';
 
@@ -61,17 +60,4 @@ Player.defaultProps = {
   isHost: null
 };
 
-function mapStateToProps(state) {
-  const players = [];
-  if (state.room.host) {
-    players.push(state.room.host);
-  }
-  if (state.room.client) {
-    players.push(state.room.client);
-  }
-  return {
-    players: players
-  };
-}
-
-export default connect(mapStateToProps)(Players);
+export default Players;

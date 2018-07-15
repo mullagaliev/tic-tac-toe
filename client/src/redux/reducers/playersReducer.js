@@ -20,8 +20,8 @@ export const playersReducer = function (state = defaultState, { type, data }) {
           };
         case GAME_START: {
           let list = [];
-          list.push(data.client);
           list.push(data.host);
+          list.push(data.client);
           return { ...state, list };
         }
         default:

@@ -1,6 +1,6 @@
 import React from 'react';
 import Screen from '../../layouts/SimpleScreen';
-import Players from '../../components/Players/Players';
+import { PlayersContainer } from '../../containers/Players';
 import GameFieldContainer from '../../containers/Field/FieldContainer';
 import ChatContainer from '../../containers/Chat/ChatContainer';
 import TopGameMenu from '../../layouts/headers/TopGameMenu';
@@ -35,7 +35,6 @@ export class GameScreen extends React.Component {
   }
 
   render() {
-    const { currentPlayer } = this.props;
     return <Screen
         classBgName={'BgImage'}
         header={<TopGameMenu
@@ -45,13 +44,7 @@ export class GameScreen extends React.Component {
         footer={<ChatContainer roomId={this.props.roomId}/>}>
       <div className="b-game">
         <div className="b-game-interface__info">
-          <Players
-              players={this.props.players}
-              currentPlayerId={this.GetCurrentPlayerId()}
-              currentPlayerMove={currentPlayer}
-              isHost={this.iAmHost()}
-              scores={this.props.roomInfo ? this.props.roomInfo.scores : {}}
-          />
+          <PlayersContainer/>
         </div>
         <div className="b-game-interface__field">
           <div className="b-game-field">
@@ -63,11 +56,5 @@ export class GameScreen extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    currentPlayer: state.players.currentPlayer
-  };
-}
-
-export const GameScreenContainer = connect(mapStateToProps)(GameScreen);
+export const GameScreenContainer = connect(null)(GameScreen);
 export default GameScreen;
