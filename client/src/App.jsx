@@ -1,73 +1,35 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
-import { AlerterContainer } from './components/Alert/Alert';
+import { AlerterContainer } from './components/Alert';
+import { PageShellHoC } from './HoC';
 import {
   MenuScreen,
   GameOverScreen,
   GameScreen,
-  Error404Screen
+  Error404Screen,
+  ConnectScreen
 } from './screens';
+import { Background } from './components/ui';
 
-import GAME_STATUSES from './constants/gameStatuses';
-import Background from './components/ui/Background';
-import { connectToRoom } from './redux/actions';
-
-class App extends Component {
+export class App extends Component {
   render() {
-    const {
-      players,
-      gameStatus
-    } = this.props;
     return <Router basename="/">
       <div>
         <Background/>
         <AlerterContainer/>
         <Switch>
-          <Route path='/menu' component={() => {
-            return gameStatus === GAME_STATUSES.STARTED ?
-                <Redirect to="/game"/>
-                :
-                <MenuScreen/>;
-          }}/>
-          <Route path='/game/over' component={() => {
-            return gameStatus !== GAME_STATUSES.FINISH ?
-                <Redirect to='/game'/> : <GameOverScreen/>;
-          }}/>
-          <Route path='/game' component={() => {
-            if (players.length !== 2) {
-              return <Redirect to='/menu'/>;
-            }
-            if (gameStatus === GAME_STATUSES.FINISH) {
-              return <Redirect to='/game/over'/>;
-            }
-            return <GameScreen/>;
-          }
-          }/>
-          <Route path='/connect/:roomId' component={({ match }) => {
-            const roomIdForConnect = match.params.roomId;
-            this.props.connectToRoom(roomIdForConnect, () => {
-            });
-            return <Redirect to='/game'/>;
-          }}/>
-          <Route path='/manual' component={Error404Screen}/>
-          <Route path='/' component={() => {
-            return <Redirect to='/menu'/>;
-          }
-          }/>
+          <Route path='/menu' component={PageShellHoC(MenuScreen)}/>
+          <Route path='/game/over' component={PageShellHoC(GameOverScreen)}/>
+          <Route path='/game' component={PageShellHoC(GameScreen)}/>
+          <Route path='/connect/:roomId' component={PageShellHoC(ConnectScreen)}/>
+          <Route path='/manual' component={PageShellHoC(Error404Screen)}/>
+          <Route path='/' component={PageShellHoC(Error404Screen)}/>
         </Switch>
       </div>
     </Router>;
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    gameStatus: state.gameStatus,
-    players: state.players.list
-  };
-}
-
-export default connect(mapStateToProps, { connectToRoom })(App);
+export default App;

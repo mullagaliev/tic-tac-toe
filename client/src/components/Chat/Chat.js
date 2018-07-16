@@ -17,6 +17,7 @@ export class Chat extends Component {
       this.setState({ message: '' });
     };
     this.props.onSend(message, cb);
+    this.setState({ message: '' });
   };
 
   onChangeMessageText = (e) => {
