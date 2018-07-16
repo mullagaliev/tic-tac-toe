@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from 'semantic-ui-react';
-import HelpInfo from '../../modals/HelpInfo';
+import { HelpInfo } from '../../components/modals';
 import LevelCounter from '../../components/common/Level/Level';
 import './TopGameMenu.sass';
 
@@ -13,25 +13,25 @@ class TopGameMenu extends Component {
     const { role } = this.props;
     const { onExit, onNewGame } = this.props;
     return (
-      <div className={'GameMenu'}>
-        <div className={'GameMenuMain'}>
-          <button className="left" onClick={onExit}>
-            <Icon name='arrow left' size="large" color="white"/>
-          </button>
-          <LevelCounter level={this.props.level} className={'alignAbsMiddle'}/>
-          <button className="right" onClick={onNewGame} disabled={role !== PLAYERS_ROLES.HOST}>
-            <Icon name='refresh' size="large" color="white"/>
-          </button>
+        <div className={'GameMenu'}>
+          <div className={'GameMenuMain'}>
+            <button className="left" onClick={onExit}>
+              <Icon name='arrow left' size="large" color="white"/>
+            </button>
+            <LevelCounter level={this.props.level} className={'alignAbsMiddle'}/>
+            <button className="right" onClick={onNewGame} disabled={role !== PLAYERS_ROLES.HOST}>
+              <Icon name='refresh' size="large" color="white"/>
+            </button>
+          </div>
+          <div className={'GameMenuAdditional'}>
+            <button className="left">
+              <HelpInfo/>
+            </button>
+            <button className="right">
+              <Icon name='volume up' size="big" color="white"/>
+            </button>
+          </div>
         </div>
-        <div className={'GameMenuAdditional'}>
-          <button className="left">
-            <HelpInfo />
-          </button>
-          <button className="right">
-            <Icon name='volume up' size="big" color="white"/>
-          </button>
-        </div>
-      </div>
     );
   }
 }
