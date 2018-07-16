@@ -35,6 +35,9 @@ class Authors extends Component {
           <a className='b-authors-item' href="https://mullagaliev.com/" target="_blank">
             <Icon name='rocket' size='big'/>
           </a>
+          <a className='b-authors-item' href="/manual" target="_blank">
+            <Icon name='question' size='big'/>
+          </a>
         </AuthorContainer>
     );
   }

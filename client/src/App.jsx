@@ -9,7 +9,8 @@ import {
   GameOverScreen,
   GameScreen,
   Error404Screen,
-  ConnectScreen
+  ConnectScreen,
+  ManualScreen
 } from './screens';
 import { Background } from './components/ui';
 
@@ -24,7 +25,7 @@ export class App extends Component {
           <Route path='/game/over' component={PageShellHoC(GameOverScreen)}/>
           <Route path='/game' component={PageShellHoC(GameScreen)}/>
           <Route path='/connect/:roomId' component={PageShellHoC(ConnectScreen)}/>
-          <Route path='/manual' component={PageShellHoC(Error404Screen)}/>
+          <Route path='/manual' component={PageShellHoC(ManualScreen)}/>
           <Route path='/' component={PageShellHoC(Error404Screen)}/>
         </Switch>
       </div>
