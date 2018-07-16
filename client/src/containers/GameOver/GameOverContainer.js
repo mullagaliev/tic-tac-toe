@@ -5,10 +5,10 @@ import { newGame } from '../../redux/actions';
 function mapStateToProps(state, ownProps) {
   return {
     ...ownProps,
-    roomId: state.room.id,
-    winnerId: state.players.winnerId,
-    isHost: state.player.isHost,
-    youWin: state.players.winnerId === state.player.id
+    roomId: state.room && state.room.id,
+    winnerId: state.players && state.players.winnerId,
+    isHost: state.player && state.player.isHost,
+    youWin: state.players && state.player && state.players.winnerId === state.player.id
   };
 }
 
