@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MessageItem from './MessageItem';
 import styled from 'styled-components';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const MessagesContainer = styled.div`
   position: relative;
@@ -17,9 +18,16 @@ export class MessageList extends Component {
     const { messages } = this.props;
     return (
         <MessagesContainer>
-          {messages && messages.length > 0 ? messages.map((item, key) =>
-              <MessageItem item={item}
-                           key={key}/>) : null}
+          <ReactCSSTransitionGroup
+              transitionAppear={false}
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={200}
+              transitionName="fadeIn"
+          >
+            {messages && messages.length > 0 ? messages.map((item, key) =>
+                <MessageItem item={item}
+                             key={key}/>) : null}
+          </ReactCSSTransitionGroup>
         </MessagesContainer>
     );
   }
