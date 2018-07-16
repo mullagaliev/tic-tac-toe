@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './App.sass';
 import { AlerterContainer } from './components/Alert';
-import { GameStatusHoC } from './HoC';
+import { PageShellHoC } from './HoC';
 import {
   MenuScreen,
   GameOverScreen,
@@ -20,12 +20,12 @@ export class App extends Component {
         <Background/>
         <AlerterContainer/>
         <Switch>
-          <Route path='/menu' component={GameStatusHoC(MenuScreen)}/>
-          <Route path='/game/over' component={GameStatusHoC(GameOverScreen)}/>
-          <Route path='/game' component={GameStatusHoC(GameScreen)}/>
-          <Route path='/connect/:roomId' component={GameStatusHoC(ConnectScreen)}/>
-          <Route path='/manual' component={GameStatusHoC(Error404Screen)}/>
-          <Route path='/' component={GameStatusHoC(Error404Screen)}/>
+          <Route path='/menu' component={PageShellHoC(MenuScreen)}/>
+          <Route path='/game/over' component={PageShellHoC(GameOverScreen)}/>
+          <Route path='/game' component={PageShellHoC(GameScreen)}/>
+          <Route path='/connect/:roomId' component={PageShellHoC(ConnectScreen)}/>
+          <Route path='/manual' component={PageShellHoC(Error404Screen)}/>
+          <Route path='/' component={PageShellHoC(Error404Screen)}/>
         </Switch>
       </div>
     </Router>;

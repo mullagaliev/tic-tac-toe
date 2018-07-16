@@ -1,7 +1,6 @@
-import React from 'react';
+import { compose } from 'redux';
+import { GameStatusHoC } from './GameStatus';
+import { PageAnimationHoC } from './PageAnimationHoC';
 
-export const PageShellHoC = Page => {
-  return props => <Page {...props} />;
-};
-
+export const PageShellHoC = compose(GameStatusHoC, PageAnimationHoC);
 export default PageShellHoC;
