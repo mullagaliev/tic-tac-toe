@@ -11,17 +11,21 @@ const { gameInfoAction } = require('../actions/otherActions');
 const { newMessageAction } = require('../actions/chatActions');
 const { MARKERS } = require('./Marker');
 
+
 class GameRoom {
   constructor(host) {
     const idHost = host.id;
     const hostPlayer = new Player(host);
     this.id = `room-${idHost}`;
-    this.link = 'http://localhost:3000/connect/' + this.id; // TODO so bad
+    this.link = `http://localhost:3000/connect/${this.id}`;
+    if (host.handshake && host.handshake.headers && host.handshake.headers.origin) {
+      this.link = `${host.handshake.headers.origin}/connect/${this.id}`;
+    }
     this.host = hostPlayer;
     this.client = null;
     this.game = null;
-    this.scores = {};
     this.level = 1;
+
     // TODO add members
     this.players = [];
     this.players
@@ -58,7 +62,7 @@ class GameRoom {
     });
   }
 
-  // TODO rewrite ( until ащк all will be called destroy )
+  // TODO rewrite
   disconnectPlayer(client) {
     let idClient = (client.id).toString();
     if (this.host && idClient === this.host.id) {
@@ -75,6 +79,7 @@ class GameRoom {
     }
   }
 
+  // TODO add Real destroy
   destroyRoom() {
     this.stopGame();
     if (this.host) {
@@ -84,7 +89,6 @@ class GameRoom {
       this.client.socket.emit('action', roomDestroyAction());
     }
     Logger.log(`room ${this.id} destroy`);
-    // TODO add Real destroy
   }
 
   isFull() {
@@ -140,7 +144,12 @@ class GameRoom {
 
   upScore(playerId) {
     this.level++;
-    this.scores[playerId] = this.scores[playerId] ? this.scores[playerId] + 1 : 1;
+    if (playerId === this.client.id) {
+      return this.client.upScore();
+    }
+    if (playerId === this.host.id) {
+      return this.host.upScore();
+    }
   }
 
   say(client, message) {
@@ -177,7 +186,6 @@ class GameRoom {
       link: this.link,
       host: this.host && this.host.getInfo(isHost),
       client: this.client && this.client.getInfo(!isHost),
-      scores: this.scores,
       level: this.level
     };
   }

@@ -2,6 +2,7 @@ const { MARKERS } = require('./Marker');
 const { Logger } = require('./Logger');
 const nanoid = require('nanoid');
 
+
 class Game {
   constructor(player1, player2, room = null, swapSides = true) {
     this.id = nanoid();
@@ -182,10 +183,14 @@ class Game {
           winnerId
         }
       };
-      this.player1.socket.emit('action', action);
-      this.player2.socket.emit('action', action);
-      if (winnerId !== -1) {
-        this.room ? this.room.upScore(winnerId) : '';
+      this.player1
+          .socket
+          .emit('action', action);
+      this.player2
+          .socket
+          .emit('action', action);
+      if (winnerId !== -1 && this.room) {
+        this.room.upScore(winnerId);
       }
     }
     else {

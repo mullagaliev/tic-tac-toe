@@ -11,7 +11,12 @@ class Player {
     this.room = 1;
     this.isHost = isHost;
     this.socket = client;
+    this.score = 0;
     Logger.log(` Player ${this} created...`);
+  }
+
+  upScore() {
+    this.score++;
   }
 
   swapMarkers(otherPlayer) {
@@ -35,7 +40,8 @@ class Player {
       current: isCurrent,
       marker: this.marker.val,
       room: this.room,
-      isHost: this.isHost
+      isHost: this.isHost,
+      score: this.score
     };
   }
 }

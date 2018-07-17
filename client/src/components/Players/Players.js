@@ -21,7 +21,7 @@ const PlayersList = styled.div`
 
 export class Players extends Component {
   render() {
-    const { players, scores, isYour, currentPlayer, currentPlayerId, myMarker } = this.props;
+    const { players, isYour, currentPlayer, currentPlayerId, myMarker } = this.props;
     let playersList = players.map(player =>
         <Player
             key={player.id}
@@ -30,7 +30,7 @@ export class Players extends Component {
             name={player.name}
             active={player.id === currentPlayer}
             isYou={player.id === currentPlayerId}
-            score={scores[player.id] ? scores[player.id] : 0}
+            score={+player.score}
         />);
     return (<PlayersContainer>
       <PlayersList>
