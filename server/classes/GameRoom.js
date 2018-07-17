@@ -1,7 +1,14 @@
 const { Logger } = require('./Logger');
 const { Player } = require('./Player');
 const { Game } = require('./Game');
-
+const {
+  roomInitAction,
+  roomDestroyAction,
+  gameStartAction,
+  gameStopAction
+} = require('../actions/roomActions');
+const { gameInfoAction } = require('../actions/otherActions');
+const { newMessageAction } = require('../actions/chatActions');
 const { MARKERS } = require('./Marker');
 
 class GameRoom {
@@ -20,38 +27,30 @@ class GameRoom {
     this.players
         .push(hostPlayer);
 
-    host.join(this.id, () => {
-      host.emit('roomInit', this.getInfo());
-      const action = {
-        type: 'roomInit',
-        data: this.getInfo()
-      };
-      host.emit('action', action);
-    });
+    host.join(this.id, () => host.emit('action', roomInitAction(this.getInfo())));
     Logger.log(`room (${this.id}) created for player ${idHost}`);
   }
 
   connectPlayer(client) {
     let clientPLayer = new Player(client, MARKERS.O, false);
     if (this.host.id === clientPLayer.id) {
-      throw new GameRoomException(`Can't connect to yourself`);
+      throw new GameRoomException(`You Can't connect to yourself`);
     }
-    // Connect to Full Room
     if (this.isFull()) {
-      throw new GameRoomException(`Can't connect to full room`);
+      throw new GameRoomException(`You Can't connect to full room`);
     }
     if (this.host.marker === clientPLayer.marker) {
-      throw new FatalGameRoomException(`Can't use equal markers`);
+      throw new FatalGameRoomException(`You Can't use equal markers`);
     }
+
     this.client = clientPLayer;
     client.join(this.id, () => {
       const message = `Client ${clientPLayer.name} connected`;
-      const action = {
-        type: 'gameInfo',
-        data: message
-      };
+      this.host
+          .socket
+          .emit('action', gameInfoAction(message));
+
       Logger.log(`Client ${clientPLayer.id} connected to room ${this.id}...`);
-      this.host.socket.emit('action', action);
       if (this.isFull()) {
         Logger.log(`room ${this.id} ready`);
         this.newGame(null, true);
@@ -79,15 +78,13 @@ class GameRoom {
   destroyRoom() {
     this.stopGame();
     if (this.host) {
-      this.host.socket.emit('roomDestroy', []);
-      this.host.socket.emit('action', { type: 'roomDestroy', data: {} });
+      this.host.socket.emit('action', roomDestroyAction());
     }
     if (this.client) {
-      this.client.socket.emit('roomDestroy', []);
-      this.client.socket.emit('action', { type: 'roomDestroy', data: {} });
+      this.client.socket.emit('action', roomDestroyAction());
     }
     Logger.log(`room ${this.id} destroy`);
-    // TODO Real destroy
+    // TODO add Real destroy
   }
 
   isFull() {
@@ -95,45 +92,40 @@ class GameRoom {
   }
 
   startGame() {
-
-    const actionHost = {
-      type: 'gameStart',
-      data: this.getInfo(true)
-    };
-
-    const actionClient = {
-      type: 'gameStart',
-      data: this.getInfo(false)
-    };
-
-    this.host.socket.emit('action', actionHost);
-    this.client.socket.emit('action', actionClient);
-
+    this.host
+        .socket
+        .emit('action', gameStartAction(this.getInfo(true)));
+    this.client
+        .socket
+        .emit('action', gameStartAction(this.getInfo(false)));
     Logger.log(`New Game in room ${this.id} started`);
   }
 
   newGame(client, root = false) {
-    if (this.host && this.client) {
-      if (root || this.host.id === (client.id).toString()) {
-        this.game = new Game(this.host, this.client, this);
-        this.startGame();
-      }
-      else {
-        throw new GameRoomException(`You can't start new game in this room!`);
-      }
+    if (!this.isFull()) {
+      throw new GameRoomException(`You can't start new game. Room is not full. `);
+    }
+    // TODO переделать
+    if (root || this.host.id === (client.id).toString()) {
+      this.game = new Game(this.host, this.client, this);
+      this.startGame();
     }
     else {
-      throw new GameRoomException(`newGame create error, room not full`);
+      throw new GameRoomException(`You can't start new game in this room!`);
     }
   }
 
   stopGame() {
     this.game = null;
     if (this.host) {
-      this.host.socket.emit('stopGame', []);
+      this.host
+          .socket
+          .emit('stopGame', gameStopAction());
     }
     if (this.client) {
-      this.client.socket.emit('stopGame', []);
+      this.client
+          .socket
+          .emit('stopGame', gameStopAction());
     }
     Logger.log(`Game in room ${this.id} stop`);
   }
@@ -142,7 +134,8 @@ class GameRoom {
     if (!this.game) {
       throw new GameRoomException(`Game not started`);
     }
-    this.game.move(row, cell, client);
+    this.game
+        .move(row, cell, client);
   }
 
   upScore(playerId) {
@@ -151,54 +144,39 @@ class GameRoom {
   }
 
   say(client, message) {
-    let playerId = (client.id).toString();
-    let name = playerId.substr(0, 5);
-
-    const date = (new Date);
-
-    if ((this.host && client === this.host.socket) ||
-        (this.client && client === this.client.socket)) {
-
-      const yourMessageAction = {
-        type: 'newMessage',
-        data: {
-          isYour: true,
-          date,
-          name,
-          playerId,
-          message
-        }
-      };
-      const messageAction = {
-        type: 'newMessage',
-        data: {
-          isYour: false,
-          date,
-          name,
-          playerId,
-          message
-        }
-      };
-      if(client === this.client.socket){
-        this.client.socket.emit('action', yourMessageAction);
-        this.host.socket.emit('action', messageAction);
-      }
-      else{
-        this.client.socket.emit('action', messageAction);
-        this.host.socket.emit('action', yourMessageAction);
-      }
-    }
-    else {
+    if (!this.isFull()) {
       throw new GameChatException(`You can't send message to the room`);
     }
+
+    const playerId = (client.id).toString();
+
+    const myMessageAction = newMessageAction({
+      isYour: true,
+      playerId,
+      message
+    });
+    const messageAction = newMessageAction({
+      isYour: false,
+      playerId,
+      message
+    });
+
+    this.client
+        .socket
+        .emit('action', client === this.client.socket ?
+            myMessageAction : messageAction);
+    this.host
+        .socket
+        .emit('action', client === this.host.socket ?
+            myMessageAction : messageAction);
   }
 
   getInfo(isHost = true) {
     return {
       id: this.id,
       link: this.link,
-      host: this.host ? this.host.getInfo(isHost) : null,
-      client: this.client ? this.client.getInfo(!isHost) : null,
+      host: this.host && this.host.getInfo(isHost),
+      client: this.client && this.client.getInfo(!isHost),
       scores: this.scores,
       level: this.level
     };

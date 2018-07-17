@@ -1,13 +1,83 @@
-let { Logger } = require('./Logger');
-let { GameRoom } = require('./GameRoom');
-let _ = require('lodash');
+const _ = require('lodash');
+const { Logger } = require('./Logger');
+const { GameRoom } = require('./GameRoom');
+const { gameErrorAction } = require('../actions/otherActions');
+
 
 class GameServer {
-  constructor(name) {
+  constructor({ io = null }) {
+    this.io = io;
+
     this.onlinePlayers = 0;
     this.onlineRooms = 0;
     this.rooms = {};
     this.players = {};
+  }
+
+  run() {
+    this.io.on('connection', (client) => {
+      this.connect(client);
+
+      client.on('action', ({ type = 'noneActionType', data = {} }) => {
+        try {
+          switch (type) {
+              /* ROOM */
+            case 'connectToRoom': {
+              const { roomId } = data;
+              this.connectToRoom(roomId, client);
+              break;
+            }
+            case 'doStep': {
+              const { roomId, row, cell } = data;
+              this.move(roomId, row, cell, client);
+              break;
+            }
+            case 'newGame': {
+              const { roomId } = data;
+              this.newGame(roomId, client);
+              break;
+            }
+            case 'disconnect': {
+              this.disconnect(client);
+              break;
+            }
+              /* CHAT */
+            case 'message': {
+              const {
+                roomId, message, cb = () => {
+                }
+              } = data;
+              this.say(roomId, client, message);
+              cb();
+              break;
+            }
+          }
+        }
+        catch (e) {
+          Logger.log(e.message);
+          client.emit('action', gameErrorAction(e.message));
+        }
+      });
+
+      client.on('disconnect', () => {
+        this.disconnect(client);
+      });
+    });
+  }
+
+  connect(playerSocket) {
+    if (!Boolean(playerSocket)) {
+      throw new GameServerException('playerSocket is empty');
+    }
+
+    const id = playerSocket.id;
+    this.players[id] = playerSocket;
+    this.onlinePlayers++;
+    Logger.log(`Client Name: ${id}  connected to server...`);
+    Logger.log(`Online players: ${this.onlinePlayers}`);
+
+    const room = new GameRoom(playerSocket);
+    this.rooms[room.id] = room;
   }
 
   disconnect(client) {
@@ -40,16 +110,6 @@ class GameServer {
     return room;
   }
 
-  connect(playerSocket) {
-    const id = playerSocket.id;
-    this.players[id] = playerSocket;
-    this.onlinePlayers++;
-    Logger.log(`Client Name: ${id}  connected to server...`);
-    Logger.log(`Online players: ${this.onlinePlayers} `);
-
-    const room = new GameRoom(playerSocket);
-    this.rooms[room.id] = room;
-  }
 
   connectToRoom(roomId, playerSocket) {
     return this.getRoomById(roomId)
