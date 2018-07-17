@@ -1,7 +1,7 @@
 const _ = require('lodash');
-const { Logger } = require('./Logger');
 const { GameRoom } = require('./GameRoom');
 const { gameErrorAction } = require('../actions/otherActions');
+const { loggerInfo } = require('../helpers/logger');
 
 
 class GameServer {
@@ -54,7 +54,7 @@ class GameServer {
           }
         }
         catch (e) {
-          Logger.log(e.message);
+          loggerInfo(e.message);
           client.emit('action', gameErrorAction(e.message));
         }
       });
@@ -73,8 +73,8 @@ class GameServer {
     const id = playerSocket.id;
     this.players[id] = playerSocket;
     this.onlinePlayers++;
-    Logger.log(`Client Name: ${id}  connected to server...`);
-    Logger.log(`Online players: ${this.onlinePlayers}`);
+    loggerInfo(`Client Name: ${id}  connected to server...`);
+    loggerInfo(`Online players: ${this.onlinePlayers}`);
 
     const room = new GameRoom(playerSocket);
     this.rooms[room.id] = room;
@@ -88,7 +88,7 @@ class GameServer {
         delete this.rooms[key];
       }
       catch (e) {
-        Logger.log(e.message);
+        loggerInfo(e.message);
       }
     });
 
@@ -97,8 +97,8 @@ class GameServer {
     if (this.onlinePlayers < 0) {
       throw new FatalGameServerException(`Server online Players can't be < 0`);
     }
-    Logger.log(`Client Name: ${id} disconnected...`);
-    Logger.log(`Online players: ${this.onlinePlayers} `);
+    loggerInfo(`Client Name: ${id} disconnected...`);
+    loggerInfo(`Online players: ${this.onlinePlayers} `);
   }
 
   // OTHER

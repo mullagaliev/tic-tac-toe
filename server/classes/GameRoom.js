@@ -1,4 +1,3 @@
-const { Logger } = require('./Logger');
 const { Player } = require('./Player');
 const { Game } = require('./Game');
 const {
@@ -9,7 +8,8 @@ const {
 } = require('../actions/roomActions');
 const { gameInfoAction } = require('../actions/otherActions');
 const { newMessageAction } = require('../actions/chatActions');
-const { MARKERS } = require('./Marker');
+const { MARKERS } = require('../constants/markers');
+const { loggerInfo } = require('../helpers/logger');
 
 
 class GameRoom {
@@ -32,7 +32,7 @@ class GameRoom {
         .push(hostPlayer);
 
     host.join(this.id, () => host.emit('action', roomInitAction(this.getInfo())));
-    Logger.log(`room (${this.id}) created for player ${idHost}`);
+    loggerInfo(`room (${this.id}) created for player ${idHost}`);
   }
 
   connectPlayer(client) {
@@ -54,9 +54,9 @@ class GameRoom {
           .socket
           .emit('action', gameInfoAction(message));
 
-      Logger.log(`Client ${clientPLayer.id} connected to room ${this.id}...`);
+      loggerInfo(`Client ${clientPLayer.id} connected to room ${this.id}...`);
       if (this.isFull()) {
-        Logger.log(`room ${this.id} ready`);
+        loggerInfo(`room ${this.id} ready`);
         this.newGame(null, true);
       }
     });
@@ -88,7 +88,7 @@ class GameRoom {
     if (this.client) {
       this.client.socket.emit('action', roomDestroyAction());
     }
-    Logger.log(`room ${this.id} destroy`);
+    loggerInfo(`room ${this.id} destroy`);
   }
 
   isFull() {
@@ -102,7 +102,7 @@ class GameRoom {
     this.client
         .socket
         .emit('action', gameStartAction(this.getInfo(false)));
-    Logger.log(`New Game in room ${this.id} started`);
+    loggerInfo(`New Game in room ${this.id} started`);
   }
 
   newGame(client, root = false) {
@@ -131,7 +131,7 @@ class GameRoom {
           .socket
           .emit('stopGame', gameStopAction());
     }
-    Logger.log(`Game in room ${this.id} stop`);
+    loggerInfo(`Game in room ${this.id} stop`);
   }
 
   move(row, cell, client) {

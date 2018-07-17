@@ -1,5 +1,6 @@
-const { MARKERS } = require('./Marker');
-const { Logger } = require('./Logger');
+const { MARKERS } = require('../constants/markers');
+const { loggerInfo } = require('../helpers/logger');
+const { getWinnerMarker } = require('../helpers/winner');
 const nanoid = require('nanoid');
 
 
@@ -31,82 +32,27 @@ class Game {
     } else {
       this.updateCurrentMovePlayer(player2);
     }
-    Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
+    loggerInfo(`game (${this.id}) created for player ${player1} and player ${player2}`);
   }
 
   getWinner() {
-    if (!this.field) {
+    const winnerMarker = getWinnerMarker(this.field);
+
+    if (!Boolean(winnerMarker)) {
       return -1;
     }
 
-    function getHorizontalWinnerMarker(field) {
-      const rows = field.filter((row) => {
-        return row[0] === row[1]
-            && row[1] === row[2]
-            && row[2] === row[3];
-      });
-      return rows[0] ? rows[0][0] : MARKERS._;
-    }
-
-    function getVerticalWinnerMarker(field) {
-      // shit
-      for (let keyCol = 0; keyCol < field.length; keyCol++) {
-        if (field[0][keyCol] === field[1][keyCol]
-            && field[1][keyCol] === field[2][keyCol]
-            && field[2][keyCol] === field[3][keyCol]
-            && field[0][keyCol] !== MARKERS._) {
-          return field[0][keyCol];
-        }
-      }
-      return MARKERS._;
-    }
-
-    function getDiagonalWinnerMarker(field) {
-      if (field[0][0] === field[1][1]
-          && field[1][1] === field[2][2]
-          && field[2][2] === field[3][3]
-          && field[0][0] !== MARKERS._) {
-        return field[0][0];
-      }
-      if (field[0][3] === field[1][2]
-          && field[1][2] === field[2][1]
-          && field[2][1] === field[3][0]
-          && field[0][3] !== MARKERS._) {
-        return field[0][3];
-      }
-      return MARKERS._;
-    }
-
-    const horizontalWinnerMarker = getHorizontalWinnerMarker(this.field);
-    const verticalWinnerMarker = getVerticalWinnerMarker(this.field);
-    const diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
-
-    let winnerMarker = MARKERS._;
-    if (horizontalWinnerMarker !== MARKERS._) {
-      winnerMarker = horizontalWinnerMarker;
-    }
-    else if (verticalWinnerMarker !== MARKERS._) {
-      winnerMarker = verticalWinnerMarker;
-    }
-    else if (diagonalWinnerMarker !== MARKERS._) {
-      winnerMarker = diagonalWinnerMarker;
-    }
-    else {
-      winnerMarker = MARKERS._;
-    }
     let playerIdX = this.player1.marker === MARKERS.X ? this.player1.id : this.player2.id;
     let playerIdO = this.player1.marker === MARKERS.O ? this.player1.id : this.player2.id;
 
-    Logger.log(`Current game field status h - ${horizontalWinnerMarker} v - ${verticalWinnerMarker} d - ${diagonalWinnerMarker}`);
-
     if (winnerMarker !== MARKERS._) {
-      Logger.log(`winner marker - ${winnerMarker}`);
+      loggerInfo(`winner marker - ${winnerMarker}`);
       if (winnerMarker === MARKERS.X) {
-        Logger.log(`winner PlayerID - ${playerIdX}`);
+        loggerInfo(`winner PlayerID - ${playerIdX}`);
         return playerIdX;
       }
       else if (winnerMarker === MARKERS.O) {
-        Logger.log(`winner PlayerID - ${playerIdO}`);
+        loggerInfo(`winner PlayerID - ${playerIdO}`);
         return playerIdO;
       }
       else {
@@ -133,14 +79,14 @@ class Game {
   isEnd() {
     //TODO add tie checker
     if (!this.moves()) {
-      Logger.log(`All busy`);
+      loggerInfo(`All busy`);
       return true;
     }
     try {
       return this.getWinner() !== -1;
     }
     catch (e) {
-      Logger.log(e.message);
+      loggerInfo(e.message);
     }
   }
 
@@ -173,7 +119,7 @@ class Game {
     }
     this.field[row][cell] = this.currentMovePlayer.marker;
     this.updateField();
-    Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
+    loggerInfo(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
 
     if (this.isEnd()) {
       const winnerId = this.getWinner();
@@ -208,7 +154,7 @@ class Game {
     else {
       this.currentMovePlayer = this.currentMovePlayer === this.player1 ? this.player2 : this.player1;
     }
-    Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
+    loggerInfo(`New current player ${this.currentMovePlayer} in game ${this.id}`);
 
     const actionCurrent = {
       type: 'switchCurrentPlayer',

@@ -1,6 +1,6 @@
 {
   "name": "tic-tac-toe-server",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "server for tic-tac-toe",
   "main": "server.js",
   "scripts": {
