@@ -17,7 +17,6 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
-    "express-livereload": "0.0.24",
     "nodemon": "^1.17.5"
   }
 }
