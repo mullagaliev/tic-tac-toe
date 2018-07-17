@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Icon } from 'semantic-ui-react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const AuthorContainer = styled.div`
@@ -35,9 +36,9 @@ class Authors extends Component {
           <a className='b-authors-item' href="https://mullagaliev.com/" target="_blank">
             <Icon name='rocket' size='big'/>
           </a>
-          <a className='b-authors-item' href="/manual" target="_blank">
+          <NavLink className='b-authors-item' to="/manual">
             <Icon name='question' size='big'/>
-          </a>
+          </NavLink>
         </AuthorContainer>
     );
   }
