@@ -63,19 +63,22 @@ class GameRoom {
   }
 
   // TODO rewrite
-  disconnectPlayer(client) {
-    let idClient = (client.id).toString();
-    if (this.host && idClient === this.host.id) {
-      this.destroyRoom();
+  disconnectPlayer(player) {
+    try {
+      const playerId = (player.id).toString();
+      if (this.host && playerId === this.host.id) {
+        this.destroyRoom();
+      }
+      else if (this.client && playerId === this.client.id) {
+        this.client = null;
+        this.destroyRoom();
+      }
+      else {
+        throw new GameRoomException(`User not from room ${this.id}.`)
+      }
     }
-    else if (this.client && idClient === this.client.id) {
-      this.client = null;
-      // this.stopGame();
-      // TODO remove it
-      this.destroyRoom();
-    }
-    else {
-      throw new GameRoomException(`User not from room ${this.id}.`)
+    catch (e) {
+      loggerInfo(e.message);
     }
   }
 

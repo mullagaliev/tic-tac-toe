@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const { GameRoom } = require('./GameRoom');
 const { gameErrorAction } = require('../actions/otherActions');
 const { loggerInfo } = require('../helpers/logger');
@@ -81,15 +80,11 @@ class GameServer {
   }
 
   disconnect(client) {
-    let roomsIds = _.keys(this.rooms);
+    const roomsIds = Object.keys(this.rooms);
+
     roomsIds.forEach((key) => {
-      try {
-        this.rooms[key].disconnectPlayer(client);
-        delete this.rooms[key];
-      }
-      catch (e) {
-        loggerInfo(e.message);
-      }
+      this.getRoomById(key)
+          .disconnectPlayer(client);
     });
 
     const id = client.id;
