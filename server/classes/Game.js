@@ -1,19 +1,15 @@
+const nanoid = require('nanoid');
+
 const { MARKERS } = require('../constants/markers');
 const { loggerInfo } = require('../helpers/logger');
 const { getWinnerMarker } = require('../helpers/winner');
-const nanoid = require('nanoid');
-
+const { getEmptyField } = require('../helpers/field');
+const { updateFieldAction } = require('../actions/fieldActions');
 
 class Game {
   constructor(player1, player2, room = null, swapSides = true) {
     this.id = nanoid();
-    let defaultField = [
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._]
-    ];
-    this.field = defaultField;
+    this.field = getEmptyField(4);
     this.room = room;
 
     this.currentMovePlayer = null;
@@ -37,29 +33,17 @@ class Game {
 
   getWinner() {
     const winnerMarker = getWinnerMarker(this.field);
-
     if (!Boolean(winnerMarker)) {
       return -1;
     }
 
-    let playerIdX = this.player1.marker === MARKERS.X ? this.player1.id : this.player2.id;
-    let playerIdO = this.player1.marker === MARKERS.O ? this.player1.id : this.player2.id;
-
-    if (winnerMarker !== MARKERS._) {
-      loggerInfo(`winner marker - ${winnerMarker}`);
-      if (winnerMarker === MARKERS.X) {
-        loggerInfo(`winner PlayerID - ${playerIdX}`);
-        return playerIdX;
-      }
-      else if (winnerMarker === MARKERS.O) {
-        loggerInfo(`winner PlayerID - ${playerIdO}`);
-        return playerIdO;
-      }
-      else {
-        throw new FatalGameException(`Undefined marker`);
-      }
+    if (winnerMarker === this.player1.marker) {
+      return this.player1.id;
     }
-    return -1;
+    if (winnerMarker === this.player2.marker) {
+      return this.player2.id;
+    }
+    throw new FatalGameException(`Undefined marker in getWinner`);
   }
 
   /**
@@ -91,12 +75,7 @@ class Game {
   }
 
   updateField() {
-    const action = {
-      type: 'updateField',
-      data: {
-        field: this.field
-      }
-    };
+    const action = updateFieldAction(this.field);
     this.player1.socket.emit('action', action);
     this.player2.socket.emit('action', action);
   }
