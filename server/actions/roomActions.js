@@ -26,4 +26,18 @@ const gameStopAction = (data = {}) => {
   };
 };
 
-module.exports = { roomInitAction, roomDestroyAction, gameStartAction, gameStopAction };
+const gameOverAction = (data = {}) => {
+  return {
+    type: 'gameOver',
+    data
+  };
+};
+
+
+module.exports = {
+  roomInitAction,
+  roomDestroyAction,
+  gameStartAction,
+  gameStopAction,
+  gameOverAction
+};

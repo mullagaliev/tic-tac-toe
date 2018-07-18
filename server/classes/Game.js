@@ -5,6 +5,8 @@ const { loggerInfo } = require('../helpers/logger');
 const { getWinnerMarker } = require('../helpers/winner');
 const { getEmptyField } = require('../helpers/field');
 const { updateFieldAction } = require('../actions/fieldActions');
+const { gameOverAction } = require('../actions/roomActions');
+
 
 class Game {
   constructor(player1, player2, room = null, swapSides = true) {
@@ -102,12 +104,9 @@ class Game {
 
     if (this.isEnd()) {
       const winnerId = this.getWinner();
-      const action = {
-        type: 'gameOver',
-        data: {
-          winnerId
-        }
-      };
+      const action = gameOverAction({
+        winnerId
+      });
       this.player1
           .socket
           .emit('action', action);
