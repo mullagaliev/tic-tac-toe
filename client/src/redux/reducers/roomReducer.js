@@ -9,7 +9,6 @@ const defaultState = {
   client: null,
   host: null,
   link: '',
-  scores: [],
   level: 1
 };
 

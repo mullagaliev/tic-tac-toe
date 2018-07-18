@@ -6,7 +6,6 @@ const mapStateToProps = (state) => {
     players: state.players.list,
     currentPlayer: state.players.currentPlayer,
     currentPlayerId: state.player.id,
-    scores: state.room.scores,
     isYour: state.players.isCurrent,
     myMarker: state.player.marker
   };

@@ -9,4 +9,6 @@ class Logger {
   }
 }
 
-module.exports = { Logger };
+const loggerInfo = Logger.log;
+
+module.exports = { loggerInfo };

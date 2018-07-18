@@ -1,5 +1,5 @@
-const { Logger } = require('./Logger');
-const { MARKERS } = require('./Marker');
+const { loggerInfo } = require('../helpers/logger');
+const { MARKERS } = require('../constants/markers');
 
 class Player {
   constructor(client, marker = MARKERS.X, isHost = true) {
@@ -11,7 +11,12 @@ class Player {
     this.room = 1;
     this.isHost = isHost;
     this.socket = client;
-    Logger.log(` Player ${this} created...`);
+    this.score = 0;
+    loggerInfo(`Player ${this} created...`);
+  }
+
+  upScore() {
+    this.score++;
   }
 
   swapMarkers(otherPlayer) {
@@ -21,7 +26,7 @@ class Player {
     if (this.marker === otherPlayer.marker) {
       throw new FatalPlayerException(`Player ${this} and Other Player ${otherPlayer} have same markers`);
     }
-    Logger.log(`Player ${this} swapped marker with Player ${otherPlayer}`);
+    loggerInfo(`Player ${this} swapped marker with Player ${otherPlayer}`);
   }
 
   toString() {
@@ -35,7 +40,8 @@ class Player {
       current: isCurrent,
       marker: this.marker.val,
       room: this.room,
-      isHost: this.isHost
+      isHost: this.isHost,
+      score: this.score
     };
   }
 }

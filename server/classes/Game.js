@@ -1,20 +1,17 @@
-const { MARKERS } = require('./Marker');
-const { Logger } = require('./Logger');
 const nanoid = require('nanoid');
+
+const { MARKERS } = require('../constants/markers');
+const { loggerInfo, getWinnerMarker, getEmptyField } = require('../helpers');
+const { updateFieldAction, gameOverAction, switchCurrentPlayerAction } = require('../actions');
+
 
 class Game {
   constructor(player1, player2, room = null, swapSides = true) {
     this.id = nanoid();
-    let defaultField = [
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._],
-      [MARKERS._, MARKERS._, MARKERS._, MARKERS._]
-    ];
-    this.field = defaultField;
+    this.field = getEmptyField(4);
     this.room = room;
 
-    this.currentMovePlayer = null;
+    this._currentMovePlayer = null;
     this.player1 = player1;
     this.player2 = player2;
     // Смена сторон
@@ -30,89 +27,48 @@ class Game {
     } else {
       this.updateCurrentMovePlayer(player2);
     }
-    Logger.log(`game (${this.id}) created for player ${player1} and player ${player2}`);
+    loggerInfo(`game (${this.id}) created for player ${player1} and player ${player2}`);
+  }
+
+  set currentMovePlayer(player) {
+    this._currentMovePlayer = player;
+    loggerInfo(`New current player ${player} in game ${this.id}`);
+
+    const actionCurrent = switchCurrentPlayerAction({
+      currentPlayer: player.id,
+      isCurrent: true
+    });
+
+    const action = switchCurrentPlayerAction({
+      currentPlayer: player.id,
+      isCurrent: false
+    });
+
+    this.player1
+        .socket
+        .emit('action', player === this.player1 ? actionCurrent : action);
+    this.player2
+        .socket
+        .emit('action', player === this.player2 ? actionCurrent : action);
+  }
+
+  get currentMovePlayer() {
+    return this._currentMovePlayer;
   }
 
   getWinner() {
-    if (!this.field) {
+    const winnerMarker = getWinnerMarker(this.field);
+    if (!Boolean(winnerMarker)) {
       return -1;
     }
 
-    function getHorizontalWinnerMarker(field) {
-      const rows = field.filter((row) => {
-        return row[0] === row[1]
-            && row[1] === row[2]
-            && row[2] === row[3];
-      });
-      return rows[0] ? rows[0][0] : MARKERS._;
+    if (winnerMarker === this.player1.marker) {
+      return this.player1.id;
     }
-
-    function getVerticalWinnerMarker(field) {
-      // shit
-      for (let keyCol = 0; keyCol < field.length; keyCol++) {
-        if (field[0][keyCol] === field[1][keyCol]
-            && field[1][keyCol] === field[2][keyCol]
-            && field[2][keyCol] === field[3][keyCol]
-            && field[0][keyCol] !== MARKERS._) {
-          return field[0][keyCol];
-        }
-      }
-      return MARKERS._;
+    if (winnerMarker === this.player2.marker) {
+      return this.player2.id;
     }
-
-    function getDiagonalWinnerMarker(field) {
-      if (field[0][0] === field[1][1]
-          && field[1][1] === field[2][2]
-          && field[2][2] === field[3][3]
-          && field[0][0] !== MARKERS._) {
-        return field[0][0];
-      }
-      if (field[0][3] === field[1][2]
-          && field[1][2] === field[2][1]
-          && field[2][1] === field[3][0]
-          && field[0][3] !== MARKERS._) {
-        return field[0][3];
-      }
-      return MARKERS._;
-    }
-
-    const horizontalWinnerMarker = getHorizontalWinnerMarker(this.field);
-    const verticalWinnerMarker = getVerticalWinnerMarker(this.field);
-    const diagonalWinnerMarker = getDiagonalWinnerMarker(this.field);
-
-    let winnerMarker = MARKERS._;
-    if (horizontalWinnerMarker !== MARKERS._) {
-      winnerMarker = horizontalWinnerMarker;
-    }
-    else if (verticalWinnerMarker !== MARKERS._) {
-      winnerMarker = verticalWinnerMarker;
-    }
-    else if (diagonalWinnerMarker !== MARKERS._) {
-      winnerMarker = diagonalWinnerMarker;
-    }
-    else {
-      winnerMarker = MARKERS._;
-    }
-    let playerIdX = this.player1.marker === MARKERS.X ? this.player1.id : this.player2.id;
-    let playerIdO = this.player1.marker === MARKERS.O ? this.player1.id : this.player2.id;
-
-    Logger.log(`Current game field status h - ${horizontalWinnerMarker} v - ${verticalWinnerMarker} d - ${diagonalWinnerMarker}`);
-
-    if (winnerMarker !== MARKERS._) {
-      Logger.log(`winner marker - ${winnerMarker}`);
-      if (winnerMarker === MARKERS.X) {
-        Logger.log(`winner PlayerID - ${playerIdX}`);
-        return playerIdX;
-      }
-      else if (winnerMarker === MARKERS.O) {
-        Logger.log(`winner PlayerID - ${playerIdO}`);
-        return playerIdO;
-      }
-      else {
-        throw new FatalGameException(`Undefined marker`);
-      }
-    }
-    return -1;
+    throw new FatalGameException(`Undefined marker in getWinner`);
   }
 
   /**
@@ -132,24 +88,19 @@ class Game {
   isEnd() {
     //TODO add tie checker
     if (!this.moves()) {
-      Logger.log(`All busy`);
+      loggerInfo(`All busy`);
       return true;
     }
     try {
       return this.getWinner() !== -1;
     }
     catch (e) {
-      Logger.log(e.message);
+      loggerInfo(e.message);
     }
   }
 
   updateField() {
-    const action = {
-      type: 'updateField',
-      data: {
-        field: this.field
-      }
-    };
+    const action = updateFieldAction(this.field);
     this.player1.socket.emit('action', action);
     this.player2.socket.emit('action', action);
   }
@@ -172,20 +123,21 @@ class Game {
     }
     this.field[row][cell] = this.currentMovePlayer.marker;
     this.updateField();
-    Logger.log(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
+    loggerInfo(`player ${this.currentMovePlayer} marked (${this.currentMovePlayer.marker}) field[${row}][${row}]`);
 
     if (this.isEnd()) {
       const winnerId = this.getWinner();
-      const action = {
-        type: 'gameOver',
-        data: {
-          winnerId
-        }
-      };
-      this.player1.socket.emit('action', action);
-      this.player2.socket.emit('action', action);
-      if (winnerId !== -1) {
-        this.room ? this.room.upScore(winnerId) : '';
+      const action = gameOverAction({
+        winnerId
+      });
+      this.player1
+          .socket
+          .emit('action', action);
+      this.player2
+          .socket
+          .emit('action', action);
+      if (winnerId !== -1 && this.room) {
+        this.room.upScore(winnerId);
       }
     }
     else {
@@ -194,42 +146,16 @@ class Game {
   }
 
   updateCurrentMovePlayer(player = null) {
-    if (player) {
-      if (player !== this.player1 && player !== this.player2) {
-        throw new FatalGameException(`Undefined player (${player})`);
-      }
-      this.currentMovePlayer = player;
-    }
-    else {
-      this.currentMovePlayer = this.currentMovePlayer === this.player1 ? this.player2 : this.player1;
-    }
-    Logger.log(`New current player ${this.currentMovePlayer} in game ${this.id}`);
-
-    const actionCurrent = {
-      type: 'switchCurrentPlayer',
-      data: {
-        currentPlayer: this.currentMovePlayer.id,
-        isCurrent: true
-      }
-    };
-
-    const action = {
-      type: 'switchCurrentPlayer',
-      data: {
-        currentPlayer: this.currentMovePlayer.id,
-        isCurrent: false
-      }
-    };
-
-    if (this.currentMovePlayer === this.player1) {
-      this.player1.socket.emit('action', actionCurrent);
-      this.player2.socket.emit('action', action);
-    }
-    else {
-      this.player1.socket.emit('action', action);
-      this.player2.socket.emit('action', actionCurrent);
+    // auto change current player
+    if (!Boolean(player)) {
+      return this.currentMovePlayer = this.currentMovePlayer === this.player1 ? this.player2 : this.player1;
     }
 
+    if (player !== this.player1 && player !== this.player2) {
+      throw new FatalGameException(`Undefined player (${player})`);
+    }
+
+    return this.currentMovePlayer = player;
   }
 }
 
